@@ -15,12 +15,6 @@ func Doctor() error {
 	fmt.Printf("%-2s %-20s %s\n", "✔", "Operating System", info.OS)
 	fmt.Printf("%-2s %-20s %s\n", "✔", "Kernel", info.Kernel)
 
-	if info.Hashcat == "not installed" {
-		fmt.Printf("%-2s %-20s %s\n", "!", "Hashcat", info.Hashcat)
-	} else {
-		fmt.Printf("%-2s %-20s %s\n", "✔", "Hashcat", info.Hashcat)
-	}
-
 	fmt.Printf("%-2s %-20s %s\n", "✔", "CPU", info.CPU.Model)
 	fmt.Printf("%-2s %-20s %d cores\n", "✔", "CPU Cores", info.CPU.Cores)
 
@@ -38,20 +32,23 @@ func Doctor() error {
 	)
 
 	if info.GPU.Name == "" {
-		fmt.Printf("%-2s %-20s %s\n", "!", "GPU", "not detected")
-		return nil
+		fmt.Printf("%-2s %-20s not detected\n", "!", "GPU")
+	} else {
+		fmt.Printf("%-2s %-20s %s\n", "✔", "GPU", info.GPU.Name)
+		fmt.Printf("%-2s %-20s %s\n", "✔", "Driver", info.GPU.Driver)
 	}
 
-	fmt.Printf("%-2s %-20s %s\n", "✔", "GPU", info.GPU.Name)
-	fmt.Printf("%-2s %-20s %s\n", "✔", "Driver", info.GPU.Driver)
-	fmt.Printf("%-2s %-20s %s / %s MiB\n",
-		"✔",
-		"GPU Memory",
-		info.GPU.MemoryUsed,
-		info.GPU.MemoryTotal,
-	)
-	fmt.Printf("%-2s %-20s %s °C\n", "✔", "GPU Temp", info.GPU.Temperature)
-	fmt.Printf("%-2s %-20s %s %%\n", "✔", "GPU Load", info.GPU.Utilization)
+	fmt.Println()
+	fmt.Println("Tools")
+	fmt.Println("-----")
+
+	for _, tool := range info.Tools {
+		if tool.Present {
+			fmt.Printf("✔ %-18s %s\n", tool.Name, tool.Version)
+		} else {
+			fmt.Printf("! %-18s not installed\n", tool.Name)
+		}
+	}
 
 	return nil
 }

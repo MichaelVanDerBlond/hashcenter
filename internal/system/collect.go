@@ -29,5 +29,7 @@ func Collect() (*Info, error) {
 
 	_ = collectGPU(info)
 
+	collectTools(info)
+
 	return info, nil
 }

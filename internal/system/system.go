@@ -9,4 +9,6 @@ type Info struct {
 	Memory MemoryInfo
 	Disk   DiskInfo
 	GPU    GPUInfo
+
+	Tools []ToolInfo
 }
