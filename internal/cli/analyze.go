@@ -39,8 +39,19 @@ func Analyze() error {
 		fmt.Printf("Recommended Tool  : %s\n", result.RecommendedTool)
 	}
 
-	fmt.Println()
+	if result.CapinfosAvailable {
+		fmt.Println()
+		fmt.Println("[Capture]")
+		fmt.Printf("Packets           : %s\n", result.PacketCount)
+		fmt.Printf("Duration          : %s\n", result.CaptureDuration)
+		fmt.Printf("Encapsulation     : %s\n", result.FileEncapsulation)
+	} else if result.Type == system.TypePCAP || result.Type == system.TypePCAPNG {
+		fmt.Println()
+		fmt.Println("[Capture]")
+		fmt.Println("capinfos not available")
+	}
 
+	fmt.Println()
 	fmt.Println("[Next Step]")
 
 	switch {
