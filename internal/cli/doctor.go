@@ -23,6 +23,7 @@ func Doctor() error {
 
 	fmt.Printf("%-2s %-20s %s\n", "✔", "CPU", info.CPU.Model)
 	fmt.Printf("%-2s %-20s %d cores\n", "✔", "CPU Cores", info.CPU.Cores)
+
 	fmt.Printf("%-2s %-20s %.2f GB\n",
 		"✔",
 		"Memory",
@@ -35,20 +36,22 @@ func Doctor() error {
 		float64(info.Disk.Available)/(1024*1024*1024),
 		float64(info.Disk.Total)/(1024*1024*1024),
 	)
-	if info.GPU.Name != "" {
-		fmt.Printf("%-2s %-20s %s\n", "✔", "GPU", info.GPU.Name)
-		fmt.Printf("%-2s %-20s %s\n", "✔", "Driver", info.GPU.Driver)
-		fmt.Printf("%-2s %-20s %s / %s MiB\n",
-			"✔",
-			"GPU Memory",
-			info.GPU.MemoryUsed,
-			info.GPU.MemoryTotal,
-		)
-		fmt.Printf("%-2s %-20s %s °C\n", "✔", "GPU Temp", info.GPU.Temperature)
-		fmt.Printf("%-2s %-20s %s %%\n", "✔", "GPU Load", info.GPU.Utilization)
-	} else {
+
+	if info.GPU.Name == "" {
 		fmt.Printf("%-2s %-20s %s\n", "!", "GPU", "not detected")
+		return nil
 	}
+
+	fmt.Printf("%-2s %-20s %s\n", "✔", "GPU", info.GPU.Name)
+	fmt.Printf("%-2s %-20s %s\n", "✔", "Driver", info.GPU.Driver)
+	fmt.Printf("%-2s %-20s %s / %s MiB\n",
+		"✔",
+		"GPU Memory",
+		info.GPU.MemoryUsed,
+		info.GPU.MemoryTotal,
+	)
+	fmt.Printf("%-2s %-20s %s °C\n", "✔", "GPU Temp", info.GPU.Temperature)
+	fmt.Printf("%-2s %-20s %s %%\n", "✔", "GPU Load", info.GPU.Utilization)
 
 	return nil
 }

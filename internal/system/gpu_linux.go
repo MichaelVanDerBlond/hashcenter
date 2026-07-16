@@ -16,15 +16,23 @@ func collectGPU(info *Info) error {
 		return nil
 	}
 
-	fields := strings.Split(strings.TrimSpace(string(out)), ",")
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	if len(lines) == 0 || strings.TrimSpace(lines[0]) == "" {
+		return nil
+	}
 
-	if len(fields) >= 6 {
-		info.GPU.Name = strings.TrimSpace(fields[0])
-		info.GPU.Driver = strings.TrimSpace(fields[1])
-		info.GPU.MemoryTotal = strings.TrimSpace(fields[2])
-		info.GPU.MemoryUsed = strings.TrimSpace(fields[3])
-		info.GPU.Temperature = strings.TrimSpace(fields[4])
-		info.GPU.Utilization = strings.TrimSpace(fields[5])
+	fields := strings.Split(lines[0], ",")
+	if len(fields) < 6 {
+		return nil
+	}
+
+	info.GPU = GPUInfo{
+		Name:        strings.TrimSpace(fields[0]),
+		Driver:      strings.TrimSpace(fields[1]),
+		MemoryTotal: strings.TrimSpace(fields[2]),
+		MemoryUsed:  strings.TrimSpace(fields[3]),
+		Temperature: strings.TrimSpace(fields[4]),
+		Utilization: strings.TrimSpace(fields[5]),
 	}
 
 	return nil
