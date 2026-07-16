@@ -1,0 +1,75 @@
+{{ define "favorites" }}
+
+<div class="card mb-4">
+
+    <div class="card-header bg-warning text-dark">
+
+        ⭐ Избранные ({{ .favCount }})
+
+    </div>
+
+    <div class="card-body p-0">
+
+        <table class="table table-striped table-hover mb-0">
+
+            <thead>
+
+            <tr>
+
+                <th width="40"></th>
+                <th>Словарь</th>
+                <th width="120">Размер</th>
+
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            {{ range .favorites }}
+
+            <tr>
+
+                <td class="text-center">
+
+                    ⭐
+
+                </td>
+
+                <td>
+
+                    {{ .Name }}
+
+                </td>
+
+                <td>
+
+                    {{ .Size }}
+
+                </td>
+
+            </tr>
+
+            {{ else }}
+
+            <tr>
+
+                <td colspan="3" class="text-center text-muted">
+
+                    Нет избранных словарей
+
+                </td>
+
+            </tr>
+
+            {{ end }}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{{ end }}
