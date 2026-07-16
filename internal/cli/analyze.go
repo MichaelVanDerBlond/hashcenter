@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/MichaelVanDerBlond/hashcenter/internal/analyze"
+	"github.com/MichaelVanDerBlond/hashcenter/internal/workflow"
 )
 
 func Analyze() error {
@@ -19,8 +20,6 @@ func Analyze() error {
 		} else {
 			fmt.Println("Usage:")
 			fmt.Println("  hashcenter analyze <capture>")
-			fmt.Println()
-			fmt.Println("reference/test.cap not found")
 			return nil
 		}
 
@@ -38,6 +37,8 @@ func Analyze() error {
 		return err
 	}
 
+	plan := workflow.Build(r)
+
 	fmt.Println("========================================")
 	fmt.Println("         HASHCENTER ANALYZE")
 	fmt.Println("========================================")
@@ -45,71 +46,30 @@ func Analyze() error {
 
 	fmt.Println("[File]")
 	fmt.Printf("Path              : %s\n", r.Path)
-	fmt.Printf("Size              : %.2f MB\n", float64(r.Size)/(1024*1024))
 	fmt.Printf("Detected Type     : %s\n", r.Type)
+	fmt.Printf("Size              : %.2f MB\n", float64(r.Size)/(1024*1024))
 
 	fmt.Println()
 
-	fmt.Println("[Analysis]")
-	fmt.Printf("Hashcat Ready     : %t\n", r.HashcatReady)
-	fmt.Printf("Conversion Needed : %t\n", r.Conversion)
+	fmt.Println("[Workflow]")
 
-	if r.Backend != "" {
-		fmt.Printf("Backend           : %s\n", r.Backend)
-	}
-
-	if r.Capinfos {
-
-		fmt.Println()
-		fmt.Println("[Capture]")
-		fmt.Printf("Packets           : %s\n", r.Packets)
-		fmt.Printf("Frames            : %s\n", r.Frames)
-		fmt.Printf("Duration          : %s\n", r.Duration)
-		fmt.Printf("Encapsulation     : %s\n", r.Encapsulation)
-	}
-
-	if r.TShark {
-
-		fmt.Println()
-		fmt.Println("[Wi-Fi]")
-		fmt.Printf("TShark            : %s\n", r.Version)
-		fmt.Printf("Beacon            : %d\n", r.BeaconFrames)
-		fmt.Printf("Probe             : %d\n", r.ProbeFrames)
-		fmt.Printf("EAPOL             : %d\n", r.EAPOLFrames)
-	}
-
-	if len(r.Backends) > 0 {
-
-		fmt.Println()
-		fmt.Println("[Backends]")
-
-		for _, b := range r.Backends {
-
-			icon := "✖"
-
-			if b.Available {
-				icon = "✔"
-			}
-
-			fmt.Printf("%s %-18s\n", icon, b.Name)
-		}
+	for i, step := range plan.Steps {
+		fmt.Printf("%d. %s\n", i+1, step)
 	}
 
 	fmt.Println()
 
-	fmt.Println("[Next Step]")
+	fmt.Println("[Capture]")
+	fmt.Printf("Packets           : %s\n", r.Packets)
+	fmt.Printf("Frames            : %s\n", r.Frames)
+	fmt.Printf("Duration          : %s\n", r.Duration)
 
-	switch {
+	fmt.Println()
 
-	case r.HashcatReady:
-		fmt.Println("Ready for Hashcat.")
-
-	case r.Conversion:
-		fmt.Printf("hashcenter convert %s --execute\n", target)
-
-	default:
-		fmt.Println("No recommendation.")
-	}
+	fmt.Println("[Wi-Fi]")
+	fmt.Printf("Beacon            : %d\n", r.BeaconFrames)
+	fmt.Printf("Probe             : %d\n", r.ProbeFrames)
+	fmt.Printf("EAPOL             : %d\n", r.EAPOLFrames)
 
 	return nil
 }
