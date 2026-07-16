@@ -52,7 +52,6 @@ func Analyze() error {
 	fmt.Println()
 
 	fmt.Println("[Workflow]")
-
 	for i, step := range plan.Steps {
 		fmt.Printf("%d. %s\n", i+1, step)
 	}
@@ -66,10 +65,31 @@ func Analyze() error {
 
 	fmt.Println()
 
-	fmt.Println("[Wi-Fi]")
-	fmt.Printf("Beacon            : %d\n", r.BeaconFrames)
-	fmt.Printf("Probe             : %d\n", r.ProbeFrames)
-	fmt.Printf("EAPOL             : %d\n", r.EAPOLFrames)
+	fmt.Printf("[Networks] (%d found)\n", len(r.Networks.Networks))
+
+	if len(r.Networks.Networks) == 0 {
+
+		fmt.Println("No Wi-Fi networks discovered.")
+
+	} else {
+
+		fmt.Printf("%-3s %-17s %-32s\n", "ID", "BSSID", "ESSID")
+		fmt.Println("----------------------------------------------------------------")
+
+		for _, n := range r.Networks.Networks {
+			fmt.Printf("%-3d %-17s %-32s\n",
+				n.ID,
+				n.BSSID,
+				n.ESSID,
+			)
+		}
+	}
+
+	fmt.Println()
+
+	fmt.Println("[Next Step]")
+	fmt.Println("Run:")
+	fmt.Printf("  hashcenter convert %s\n", target)
 
 	return nil
 }

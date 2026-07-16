@@ -1,6 +1,7 @@
 package system
 
 import (
+	"os"
 	"os/exec"
 	"path/filepath"
 )
@@ -18,13 +19,15 @@ type ConversionPlan struct {
 
 func BuildConversionPlan(input string, t CaptureFileType) ConversionPlan {
 
+	_ = os.MkdirAll("output", 0755)
+
 	out := filepath.Base(input)
+	out = out[:len(out)-len(filepath.Ext(out))] + ".hc22000"
+	out = filepath.Join("output", out)
 
 	switch t {
 
 	case TypePCAP, TypePCAPNG:
-
-		out = out[:len(out)-len(filepath.Ext(out))] + ".hc22000"
 
 		p := ConversionPlan{
 			InputType:        t,

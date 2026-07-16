@@ -1,5 +1,7 @@
 package analyze
 
+import "github.com/MichaelVanDerBlond/hashcenter/internal/network"
+
 type Backend struct {
 	Name      string
 	Available bool
@@ -17,6 +19,8 @@ type Report struct {
 	Backend string
 
 	Backends []Backend
+
+	Networks network.List
 
 	Capinfos bool
 

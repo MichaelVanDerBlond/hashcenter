@@ -6,6 +6,7 @@ import (
 )
 
 func Execute() error {
+
 	if len(os.Args) < 2 {
 		printHelp()
 		return nil
@@ -25,11 +26,14 @@ func Execute() error {
 	case "capture":
 		return Capture()
 
+	case "analyze":
+		return Analyze()
+
 	case "convert":
 		return Convert()
 
-	case "analyze":
-		return Analyze()
+	case "list":
+		return List()
 
 	case "benchmark":
 		return Benchmark()
@@ -46,17 +50,21 @@ func Execute() error {
 }
 
 func printHelp() {
+
 	fmt.Println("HashCenter")
 	fmt.Println()
+
 	fmt.Println("Usage:")
 	fmt.Println("  hashcenter <command>")
 	fmt.Println()
+
 	fmt.Println("Commands:")
 	fmt.Println("  version")
 	fmt.Println("  doctor")
 	fmt.Println("  inventory")
 	fmt.Println("  capture")
-	fmt.Println("  convert")
 	fmt.Println("  analyze")
+	fmt.Println("  convert")
+	fmt.Println("  list")
 	fmt.Println("  benchmark")
 }

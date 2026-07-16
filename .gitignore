@@ -1,26 +1,9 @@
+# Build
 hashcenter
 
-data/hashcenter.db
+# Generated output
+output/
+*.hc22000
 
-logs/*
-
-results/*
-
-uploads/*
-
-*.log
-
-*.pot
-
-*.found
-
-*.pid
-
-*.tmp
-
-.DS_Store
-
-.idea/
-
-.vscode/
-
+# Go
+coverage.out
