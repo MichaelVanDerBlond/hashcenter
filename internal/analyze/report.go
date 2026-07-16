@@ -28,4 +28,8 @@ type Report struct {
 	Version string
 
 	Frames string
+
+	BeaconFrames uint64
+	ProbeFrames  uint64
+	EAPOLFrames  uint64
 }

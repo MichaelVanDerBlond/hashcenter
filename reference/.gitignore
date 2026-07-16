@@ -1,0 +1,5 @@
+
+# Local reference captures
+reference/*.cap
+reference/*.pcap
+reference/*.pcapng
