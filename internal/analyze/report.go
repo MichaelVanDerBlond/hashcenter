@@ -19,4 +19,6 @@ type Report struct {
 
 	TShark  bool
 	Version string
+
+	Frames string
 }

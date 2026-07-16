@@ -40,12 +40,18 @@ func Analyze() error {
 	}
 
 	if r.Capinfos {
-
 		fmt.Println()
 		fmt.Println("[Capture]")
 		fmt.Printf("Packets           : %s\n", r.Packets)
 		fmt.Printf("Duration          : %s\n", r.Duration)
 		fmt.Printf("Encapsulation     : %s\n", r.Encapsulation)
+	}
+
+	if r.TShark {
+		fmt.Println()
+		fmt.Println("[TShark]")
+		fmt.Printf("Version           : %s\n", r.Version)
+		fmt.Printf("Frames            : %s\n", r.Frames)
 	}
 
 	fmt.Println()
