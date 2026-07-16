@@ -1,6 +1,7 @@
 package system
 
 func Collect() (*Info, error) {
+
 	info := &Info{}
 
 	if err := collectOS(info); err != nil {
@@ -28,6 +29,8 @@ func Collect() (*Info, error) {
 	}
 
 	_ = collectGPU(info)
+
+	_ = collectWiFi(info)
 
 	collectTools(info)
 

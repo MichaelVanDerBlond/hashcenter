@@ -11,4 +11,5 @@ type Info struct {
 	GPU    GPUInfo
 
 	Tools []ToolInfo
+	WiFi  []WiFiInterface
 }
