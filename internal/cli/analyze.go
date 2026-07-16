@@ -55,6 +55,17 @@ func Analyze() error {
 	}
 
 	fmt.Println()
+	fmt.Println("[Backends]")
+
+	for _, b := range r.Backends {
+		icon := "✖"
+		if b.Available {
+			icon = "✔"
+		}
+		fmt.Printf("%s %-16s\n", icon, b.Name)
+	}
+
+	fmt.Println()
 	fmt.Println("[Next Step]")
 
 	if r.HashcatReady {
