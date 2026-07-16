@@ -1,5 +1,10 @@
 package analyze
 
+type Backend struct {
+	Name      string
+	Available bool
+}
+
 type Report struct {
 	Path string
 	Size int64
@@ -10,6 +15,8 @@ type Report struct {
 	Conversion   bool
 
 	Backend string
+
+	Backends []Backend
 
 	Capinfos bool
 
