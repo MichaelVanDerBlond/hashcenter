@@ -70,8 +70,9 @@ func collectTShark(r *Report) error {
 		}
 	}
 
-	// Wi-Fi counters
+	// Wi-Fi Counters
 	r.BeaconFrames = tsharkCount(r.Path, "wlan.fc.type_subtype == 8")
+	r.ProbeFrames = tsharkCount(r.Path, "wlan.fc.type_subtype == 4")
 
 	return nil
 }
