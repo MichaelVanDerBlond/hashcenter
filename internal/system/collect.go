@@ -23,5 +23,9 @@ func Collect() (*Info, error) {
 		return nil, err
 	}
 
+	if err := collectDisk(info); err != nil {
+		return nil, err
+	}
+
 	return info, nil
 }

@@ -29,5 +29,12 @@ func Doctor() error {
 		float64(info.Memory.Total)/(1024*1024*1024),
 	)
 
+	fmt.Printf("%-2s %-20s %.2f / %.2f GB free\n",
+		"✔",
+		"Disk",
+		float64(info.Disk.Available)/(1024*1024*1024),
+		float64(info.Disk.Total)/(1024*1024*1024),
+	)
+
 	return nil
 }

@@ -6,4 +6,5 @@ type Info struct {
 	Hashcat string
 	CPU     CPUInfo
 	Memory  MemoryInfo
+	Disk    DiskInfo
 }
