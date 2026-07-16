@@ -15,26 +15,31 @@ func collectMemory(info *Info) error {
 	}
 	defer f.Close()
 
-	s := bufio.NewScanner(f)
+	scanner := bufio.NewScanner(f)
 
-	for s.Scan() {
+	for scanner.Scan() {
 
-		line := s.Text()
+		fields := strings.Fields(scanner.Text())
+		if len(fields) < 2 {
+			continue
+		}
 
-		if strings.HasPrefix(line, "MemTotal:") {
+		value, err := strconv.ParseUint(fields[1], 10, 64)
+		if err != nil {
+			continue
+		}
 
-			fields := strings.Fields(line)
+		value *= 1024
 
-			if len(fields) >= 2 {
-
-				v, _ := strconv.ParseUint(fields[1], 10, 64)
-
-				info.Memory.Total = v * 1024
-			}
-
-			break
+		switch strings.TrimSuffix(fields[0], ":") {
+		case "MemTotal":
+			info.Memory.Total = value
+		case "MemAvailable":
+			info.Memory.Available = value
+		case "MemFree":
+			info.Memory.Free = value
 		}
 	}
 
-	return nil
+	return scanner.Err()
 }

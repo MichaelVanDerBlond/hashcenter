@@ -20,11 +20,10 @@ func Doctor() error {
 	fmt.Printf("%-2s %-20s %d\n", "✔", "Cores", info.CPU.Cores)
 	fmt.Printf("%-2s %-20s %d\n", "✔", "Threads", info.CPU.Threads)
 
-	fmt.Printf("%-2s %-20s %.2f GB\n",
-		"✔",
-		"Memory",
-		float64(info.Memory.Total)/(1024*1024*1024),
-	)
+	fmt.Printf("%-2s %-20s %.2f GB\n", "✔", "Memory Total",
+		float64(info.Memory.Total)/(1024*1024*1024))
+	fmt.Printf("%-2s %-20s %.2f GB\n", "✔", "Memory Available",
+		float64(info.Memory.Available)/(1024*1024*1024))
 
 	fmt.Printf("%-2s %-20s %.2f / %.2f GB free\n",
 		"✔",

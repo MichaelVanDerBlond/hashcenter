@@ -31,16 +31,15 @@ func Inventory() error {
 	fmt.Println()
 
 	fmt.Println("[Memory]")
-	fmt.Printf("Total        : %.2f GB\n",
-		float64(info.Memory.Total)/(1024*1024*1024))
+	fmt.Printf("Total        : %.2f GB\n", float64(info.Memory.Total)/(1024*1024*1024))
+	fmt.Printf("Available    : %.2f GB\n", float64(info.Memory.Available)/(1024*1024*1024))
+	fmt.Printf("Free         : %.2f GB\n", float64(info.Memory.Free)/(1024*1024*1024))
 	fmt.Println()
 
 	fmt.Println("[Disk]")
 	fmt.Printf("Mount        : %s\n", info.Disk.Path)
-	fmt.Printf("Total        : %.2f GB\n",
-		float64(info.Disk.Total)/(1024*1024*1024))
-	fmt.Printf("Available    : %.2f GB\n",
-		float64(info.Disk.Available)/(1024*1024*1024))
+	fmt.Printf("Total        : %.2f GB\n", float64(info.Disk.Total)/(1024*1024*1024))
+	fmt.Printf("Available    : %.2f GB\n", float64(info.Disk.Available)/(1024*1024*1024))
 	fmt.Println()
 
 	fmt.Println("[GPU]")
@@ -49,9 +48,7 @@ func Inventory() error {
 	} else {
 		fmt.Printf("Model        : %s\n", info.GPU.Name)
 		fmt.Printf("Driver       : %s\n", info.GPU.Driver)
-		fmt.Printf("Memory       : %s / %s MiB\n",
-			info.GPU.MemoryUsed,
-			info.GPU.MemoryTotal)
+		fmt.Printf("Memory       : %s / %s MiB\n", info.GPU.MemoryUsed, info.GPU.MemoryTotal)
 		fmt.Printf("Temperature  : %s °C\n", info.GPU.Temperature)
 		fmt.Printf("Load         : %s %%\n", info.GPU.Utilization)
 	}
