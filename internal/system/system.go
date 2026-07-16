@@ -7,4 +7,5 @@ type Info struct {
 	CPU     CPUInfo
 	Memory  MemoryInfo
 	Disk    DiskInfo
+	GPU     GPUInfo
 }

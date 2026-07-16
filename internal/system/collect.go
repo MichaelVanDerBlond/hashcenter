@@ -27,5 +27,8 @@ func Collect() (*Info, error) {
 		return nil, err
 	}
 
+	// GPU не является обязательным компонентом
+	_ = collectGPU(info)
+
 	return info, nil
 }

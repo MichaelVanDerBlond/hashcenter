@@ -35,6 +35,20 @@ func Doctor() error {
 		float64(info.Disk.Available)/(1024*1024*1024),
 		float64(info.Disk.Total)/(1024*1024*1024),
 	)
+	if info.GPU.Name != "" {
+		fmt.Printf("%-2s %-20s %s\n", "✔", "GPU", info.GPU.Name)
+		fmt.Printf("%-2s %-20s %s\n", "✔", "Driver", info.GPU.Driver)
+		fmt.Printf("%-2s %-20s %s / %s MiB\n",
+			"✔",
+			"GPU Memory",
+			info.GPU.MemoryUsed,
+			info.GPU.MemoryTotal,
+		)
+		fmt.Printf("%-2s %-20s %s °C\n", "✔", "GPU Temp", info.GPU.Temperature)
+		fmt.Printf("%-2s %-20s %s %%\n", "✔", "GPU Load", info.GPU.Utilization)
+	} else {
+		fmt.Printf("%-2s %-20s %s\n", "!", "GPU", "not detected")
+	}
 
 	return nil
 }
