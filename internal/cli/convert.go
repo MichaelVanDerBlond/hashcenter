@@ -10,15 +10,25 @@ import (
 
 func Convert() error {
 
-	if len(os.Args) != 3 {
+	execute := false
+
+	args := os.Args[2:]
+
+	if len(args) == 2 && args[1] == "--execute" {
+		execute = true
+		args = args[:1]
+	}
+
+	if len(args) != 1 {
 		fmt.Println("Usage:")
 		fmt.Println("  hashcenter convert <file>")
+		fmt.Println("  hashcenter convert <file> --execute")
 		return nil
 	}
 
-	input := os.Args[2]
+	input := args[0]
 
-	info, err := os.Stat(input)
+	stat, err := os.Stat(input)
 	if err != nil {
 		return err
 	}
@@ -32,26 +42,49 @@ func Convert() error {
 	fmt.Println()
 
 	fmt.Printf("Input File         : %s\n", input)
-	fmt.Printf("Size               : %.2f KB\n", float64(info.Size())/1024)
+	fmt.Printf("Size               : %.2f KB\n", float64(stat.Size())/1024)
 	fmt.Printf("Detected Type      : %s\n", plan.InputType)
 	fmt.Printf("Target Type        : %s\n", plan.OutputType)
 	fmt.Printf("Backend            : %s\n", plan.Backend)
-
-	if plan.BackendAvailable {
-		fmt.Println("Backend Status     : AVAILABLE")
-	} else {
-		fmt.Println("Backend Status     : NOT FOUND")
-	}
-
+	fmt.Printf("Backend Available  : %t\n", plan.BackendAvailable)
 	fmt.Printf("Conversion Needed  : %t\n", plan.ConversionNeeded)
 	fmt.Printf("Output File        : %s\n", plan.OutputFile)
-	fmt.Printf("Description        : %s\n", plan.Description)
 
 	if len(plan.Command) > 0 {
 		fmt.Println()
-		fmt.Println("Planned command:")
+		fmt.Println("Command:")
 		fmt.Printf("  %s\n", strings.Join(plan.Command, " "))
 	}
+
+	if !execute {
+		fmt.Println()
+		fmt.Println("Dry-run mode.")
+		fmt.Println("Use --execute to run the conversion.")
+		return nil
+	}
+
+	if !plan.BackendAvailable {
+		return fmt.Errorf("backend %q not found", plan.Backend)
+	}
+
+	if len(plan.Command) == 0 {
+		fmt.Println()
+		fmt.Println("Nothing to execute.")
+		return nil
+	}
+
+	fmt.Println()
+	fmt.Println("Executing...")
+
+	result, err := system.RunCommand(plan.Command)
+
+	fmt.Println(result.Output)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Done.")
 
 	return nil
 }
