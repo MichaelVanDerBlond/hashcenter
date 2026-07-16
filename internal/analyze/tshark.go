@@ -19,13 +19,12 @@ func tsharkCount(path, filter string) uint64 {
 		return 0
 	}
 
-	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
-
-	if len(lines) == 1 && lines[0] == "" {
+	text := strings.TrimSpace(string(out))
+	if text == "" {
 		return 0
 	}
 
-	return uint64(len(lines))
+	return uint64(len(strings.Split(text, "\n")))
 }
 
 func collectTShark(r *Report) error {
@@ -36,24 +35,21 @@ func collectTShark(r *Report) error {
 
 	r.TShark = true
 
-	out, err := run("tshark", "--version")
-	if err == nil {
+	out, _ := run("tshark", "--version")
 
-		lines := strings.Split(string(out), "\n")
+	for _, line := range strings.Split(string(out), "\n") {
 
-		for _, line := range lines {
-			line = strings.TrimSpace(line)
+		line = strings.TrimSpace(line)
 
-			if strings.HasPrefix(line, "TShark") ||
-				strings.HasPrefix(line, "Wireshark") {
+		if strings.HasPrefix(line, "TShark") ||
+			strings.HasPrefix(line, "Wireshark") {
 
-				r.Version = line
-				break
-			}
+			r.Version = line
+			break
 		}
 	}
 
-	out, err = run(
+	out, err := run(
 		"tshark",
 		"-r",
 		r.Path,
@@ -65,18 +61,17 @@ func collectTShark(r *Report) error {
 
 	if err == nil {
 
-		lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+		text := strings.TrimSpace(string(out))
 
-		if len(lines) == 1 && lines[0] == "" {
+		if text == "" {
 			r.Frames = "0"
 		} else {
-			r.Frames = strconv.Itoa(len(lines))
+			r.Frames = strconv.Itoa(len(strings.Split(text, "\n")))
 		}
 	}
 
-	r.BeaconFrames = tsharkCount(r.Path, "wlan.fc.type_subtype==8")
-	r.ProbeFrames = tsharkCount(r.Path, "wlan.fc.type_subtype==4")
-	r.EAPOLFrames = tsharkCount(r.Path, "eapol")
+	// Wi-Fi counters
+	r.BeaconFrames = tsharkCount(r.Path, "wlan.fc.type_subtype == 8")
 
 	return nil
 }
