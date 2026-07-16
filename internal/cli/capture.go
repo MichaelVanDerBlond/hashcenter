@@ -19,17 +19,25 @@ func Capture() error {
 	fmt.Println()
 
 	if len(info.WiFi) == 0 {
-
 		fmt.Println("No Wi-Fi interfaces detected.")
 		return nil
 	}
 
-	fmt.Println("Detected Wi-Fi interfaces")
-	fmt.Println()
+	fmt.Printf("%-4s %-10s %-20s %-12s\n",
+		"#",
+		"PHY",
+		"INTERFACE",
+		"MODE")
+
+	fmt.Println("--------------------------------------------------------")
 
 	for i, iface := range info.WiFi {
-
-		fmt.Printf("%d. %s\n", i+1, iface.Name)
+		fmt.Printf("%-4d %-10s %-20s %-12s\n",
+			i+1,
+			iface.Phy,
+			iface.Name,
+			iface.Type,
+		)
 	}
 
 	return nil

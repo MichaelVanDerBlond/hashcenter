@@ -7,6 +7,8 @@ import (
 
 type WiFiInterface struct {
 	Name string
+	Phy  string
+	Type string
 }
 
 func collectWiFi(info *Info) error {
@@ -16,17 +18,25 @@ func collectWiFi(info *Info) error {
 		return nil
 	}
 
-	lines := strings.Split(string(out), "\n")
+	var current *WiFiInterface
 
-	for _, line := range lines {
+	for _, line := range strings.Split(string(out), "\n") {
 
 		line = strings.TrimSpace(line)
 
-		if strings.HasPrefix(line, "Interface ") {
+		switch {
 
+		case strings.HasPrefix(line, "phy#"):
 			info.WiFi = append(info.WiFi, WiFiInterface{
-				Name: strings.TrimSpace(strings.TrimPrefix(line, "Interface")),
+				Phy: line,
 			})
+			current = &info.WiFi[len(info.WiFi)-1]
+
+		case strings.HasPrefix(line, "Interface ") && current != nil:
+			current.Name = strings.TrimSpace(strings.TrimPrefix(line, "Interface"))
+
+		case strings.HasPrefix(line, "type ") && current != nil:
+			current.Type = strings.TrimSpace(strings.TrimPrefix(line, "type"))
 		}
 	}
 
