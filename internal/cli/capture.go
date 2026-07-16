@@ -23,22 +23,41 @@ func Capture() error {
 		return nil
 	}
 
-	fmt.Printf("%-4s %-10s %-20s %-12s\n",
+	fmt.Printf("%-3s %-8s %-18s %-10s %-9s %-8s\n",
 		"#",
 		"PHY",
 		"INTERFACE",
-		"MODE")
+		"MODE",
+		"MONITOR",
+		"AIRMON")
 
-	fmt.Println("--------------------------------------------------------")
+	fmt.Println("----------------------------------------------------------------")
 
 	for i, iface := range info.WiFi {
-		fmt.Printf("%-4d %-10s %-20s %-12s\n",
+
+		monitor := "YES"
+		if !iface.MonitorCapable {
+			monitor = "NO"
+		}
+
+		airmon := "YES"
+		if !iface.AirmonAvailable {
+			airmon = "NO"
+		}
+
+		fmt.Printf("%-3d %-8s %-18s %-10s %-9s %-8s\n",
 			i+1,
 			iface.Phy,
 			iface.Name,
 			iface.Type,
+			monitor,
+			airmon,
 		)
 	}
+
+	fmt.Println()
+	fmt.Println("Next step:")
+	fmt.Println("  hashcenter capture start <interface>")
 
 	return nil
 }

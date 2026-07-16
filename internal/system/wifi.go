@@ -6,12 +6,17 @@ import (
 )
 
 type WiFiInterface struct {
-	Name string
-	Phy  string
-	Type string
+	Name            string
+	Phy             string
+	Type            string
+	MonitorCapable  bool
+	AirmonAvailable bool
 }
 
 func collectWiFi(info *Info) error {
+
+	_, airmonErr := exec.Command("airmon-ng").Output()
+	airmonAvailable := airmonErr == nil
 
 	out, err := exec.Command("iw", "dev").Output()
 	if err != nil {
@@ -28,7 +33,9 @@ func collectWiFi(info *Info) error {
 
 		case strings.HasPrefix(line, "phy#"):
 			info.WiFi = append(info.WiFi, WiFiInterface{
-				Phy: line,
+				Phy:             line,
+				AirmonAvailable: airmonAvailable,
+				MonitorCapable:  true,
 			})
 			current = &info.WiFi[len(info.WiFi)-1]
 
