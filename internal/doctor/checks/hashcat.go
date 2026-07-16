@@ -16,16 +16,8 @@ func (Hashcat) Name() string {
 func (Hashcat) Run() doctor.Result {
 	out, err := exec.Command("hashcat", "--version").Output()
 	if err != nil {
-		return doctor.Result{
-			Name:    "Hashcat",
-			Passed:  false,
-			Message: "not installed",
-		}
+		return doctor.Warning("Hashcat", "not installed")
 	}
 
-	return doctor.Result{
-		Name:    "Hashcat",
-		Passed:  true,
-		Message: strings.TrimSpace(string(out)),
-	}
+	return doctor.OK("Hashcat", strings.TrimSpace(string(out)))
 }

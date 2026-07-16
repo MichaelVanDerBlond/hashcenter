@@ -16,29 +16,15 @@ func (OS) Name() string {
 func (OS) Run() doctor.Result {
 	data, err := os.ReadFile("/etc/os-release")
 	if err != nil {
-		return doctor.Result{
-			Name:    "Operating System",
-			Passed:  false,
-			Message: err.Error(),
-		}
+		return doctor.Error("Operating System", err.Error())
 	}
 
 	for _, line := range strings.Split(string(data), "\n") {
 		if strings.HasPrefix(line, "PRETTY_NAME=") {
-			value := strings.TrimPrefix(line, "PRETTY_NAME=")
-			value = strings.Trim(value, "\"")
-
-			return doctor.Result{
-				Name:    "Operating System",
-				Passed:  true,
-				Message: value,
-			}
+			value := strings.Trim(strings.TrimPrefix(line, "PRETTY_NAME="), "\"")
+			return doctor.OK("Operating System", value)
 		}
 	}
 
-	return doctor.Result{
-		Name:    "Operating System",
-		Passed:  false,
-		Message: "PRETTY_NAME not found",
-	}
+	return doctor.Error("Operating System", "PRETTY_NAME not found")
 }

@@ -19,12 +19,11 @@ func Doctor() error {
 	results := d.Run()
 
 	for _, r := range results {
-		status := "✖"
-		if r.Passed {
-			status = "✔"
-		}
-
-		fmt.Printf("%s %-20s %s\n", status, r.Name, r.Message)
+		fmt.Printf("%-2s %-20s %s\n",
+			r.Status.Icon(),
+			r.Name,
+			r.Message,
+		)
 	}
 
 	return nil
