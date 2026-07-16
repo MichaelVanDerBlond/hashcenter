@@ -36,6 +36,7 @@ func Analyze(path string) (*Report, error) {
 	}
 
 	_ = collectCapinfos(r)
+	_ = collectTShark(r)
 
 	return r, nil
 }

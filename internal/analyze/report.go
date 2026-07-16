@@ -16,4 +16,7 @@ type Report struct {
 	Packets       string
 	Duration      string
 	Encapsulation string
+
+	TShark  bool
+	Version string
 }

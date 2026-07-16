@@ -39,8 +39,16 @@ func Analyze() error {
 		fmt.Printf("Backend           : %s\n", r.Backend)
 	}
 
-	fmt.Println()
+	if r.Capinfos {
 
+		fmt.Println()
+		fmt.Println("[Capture]")
+		fmt.Printf("Packets           : %s\n", r.Packets)
+		fmt.Printf("Duration          : %s\n", r.Duration)
+		fmt.Printf("Encapsulation     : %s\n", r.Encapsulation)
+	}
+
+	fmt.Println()
 	fmt.Println("[Next Step]")
 
 	if r.HashcatReady {
