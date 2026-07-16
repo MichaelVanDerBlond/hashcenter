@@ -1,69 +1,61 @@
 package system
 
+import (
+	"os/exec"
+	"path/filepath"
+)
+
 type ConversionPlan struct {
 	InputType        CaptureFileType
 	OutputType       string
 	Backend          string
+	BackendAvailable bool
 	ConversionNeeded bool
 	Description      string
+	OutputFile       string
+	Command          []string
 }
 
-func BuildConversionPlan(t CaptureFileType) ConversionPlan {
+func BuildConversionPlan(input string, t CaptureFileType) ConversionPlan {
+
+	out := filepath.Base(input)
 
 	switch t {
 
 	case TypePCAP, TypePCAPNG:
-		return ConversionPlan{
+
+		out = out[:len(out)-len(filepath.Ext(out))] + ".hc22000"
+
+		p := ConversionPlan{
 			InputType:        t,
 			OutputType:       "HC22000",
 			Backend:          "hcxpcapngtool",
 			ConversionNeeded: true,
 			Description:      "Convert capture to HC22000.",
+			OutputFile:       out,
 		}
+
+		if _, err := exec.LookPath("hcxpcapngtool"); err == nil {
+			p.BackendAvailable = true
+			p.Command = []string{
+				"hcxpcapngtool",
+				"-o", out,
+				input,
+			}
+		}
+
+		return p
 
 	case TypeHC22000:
+
 		return ConversionPlan{
 			InputType:        t,
 			OutputType:       "HC22000",
 			Backend:          "-",
+			BackendAvailable: true,
 			ConversionNeeded: false,
 			Description:      "Already compatible with Hashcat.",
-		}
-
-	case Type16800:
-		return ConversionPlan{
-			InputType:        t,
-			OutputType:       "16800",
-			Backend:          "-",
-			ConversionNeeded: false,
-			Description:      "PMKID hash detected.",
-		}
-
-	case Type16801:
-		return ConversionPlan{
-			InputType:        t,
-			OutputType:       "16801",
-			Backend:          "-",
-			ConversionNeeded: false,
-			Description:      "PMKID + ESSID hash detected.",
-		}
-
-	case TypeHCCAP:
-		return ConversionPlan{
-			InputType:        t,
-			OutputType:       "HC22000",
-			Backend:          "hcxhashtool",
-			ConversionNeeded: true,
-			Description:      "Legacy HCCAP conversion required.",
-		}
-
-	case TypeHCCAPX:
-		return ConversionPlan{
-			InputType:        t,
-			OutputType:       "HC22000",
-			Backend:          "hcxhashtool",
-			ConversionNeeded: true,
-			Description:      "Legacy HCCAPX conversion required.",
+			OutputFile:       input,
 		}
 	}
 
