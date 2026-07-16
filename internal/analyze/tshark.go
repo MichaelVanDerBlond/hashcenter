@@ -1,19 +1,18 @@
 package analyze
 
 import (
-	"os/exec"
 	"strings"
 )
 
 func collectTShark(r *Report) error {
 
-	if _, err := exec.LookPath("tshark"); err != nil {
+	if !exists("tshark") {
 		return nil
 	}
 
 	r.TShark = true
 
-	out, err := exec.Command("tshark", "--version").Output()
+	out, err := run("tshark", "--version")
 	if err == nil {
 
 		lines := strings.Split(string(out), "\n")
@@ -23,7 +22,7 @@ func collectTShark(r *Report) error {
 		}
 	}
 
-	out, err = exec.Command(
+	out, err = run(
 		"tshark",
 		"-r",
 		r.Path,
@@ -31,7 +30,7 @@ func collectTShark(r *Report) error {
 		"fields",
 		"-e",
 		"frame.number",
-	).Output()
+	)
 
 	if err != nil {
 		return nil
@@ -42,9 +41,7 @@ func collectTShark(r *Report) error {
 	if len(lines) == 1 && lines[0] == "" {
 		r.Frames = "0"
 	} else {
-		r.Frames = strings.TrimSpace(
-			strings.Split(strings.TrimSpace(string(out)), "\n")[len(lines)-1],
-		)
+		r.Frames = strings.TrimSpace(lines[len(lines)-1])
 	}
 
 	return nil
