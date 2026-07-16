@@ -23,8 +23,11 @@ func Inventory() error {
 	fmt.Println()
 
 	fmt.Println("[CPU]")
+	fmt.Printf("Vendor       : %s\n", info.CPU.Vendor)
 	fmt.Printf("Model        : %s\n", info.CPU.Model)
+	fmt.Printf("Architecture : %s\n", info.CPU.Arch)
 	fmt.Printf("Cores        : %d\n", info.CPU.Cores)
+	fmt.Printf("Threads      : %d\n", info.CPU.Threads)
 	fmt.Println()
 
 	fmt.Println("[Memory]")

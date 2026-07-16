@@ -16,7 +16,9 @@ func Doctor() error {
 	fmt.Printf("%-2s %-20s %s\n", "✔", "Kernel", info.Kernel)
 
 	fmt.Printf("%-2s %-20s %s\n", "✔", "CPU", info.CPU.Model)
-	fmt.Printf("%-2s %-20s %d cores\n", "✔", "CPU Cores", info.CPU.Cores)
+	fmt.Printf("%-2s %-20s %s\n", "✔", "Architecture", info.CPU.Arch)
+	fmt.Printf("%-2s %-20s %d\n", "✔", "Cores", info.CPU.Cores)
+	fmt.Printf("%-2s %-20s %d\n", "✔", "Threads", info.CPU.Threads)
 
 	fmt.Printf("%-2s %-20s %.2f GB\n",
 		"✔",

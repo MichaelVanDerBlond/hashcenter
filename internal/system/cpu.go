@@ -1,6 +1,9 @@
 package system
 
 type CPUInfo struct {
-	Model string
-	Cores int
+	Model   string
+	Vendor  string
+	Arch    string
+	Cores   int
+	Threads int
 }
