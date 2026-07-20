@@ -1,6 +1,21 @@
 package session
 
+import "time"
+
 type Session struct {
-	Capture string `json:"capture"`
-	HC22000 string `json:"hc22000"`
+	ID string
+
+	State State
+
+	Started  time.Time
+	Finished time.Time
+
+	Interface string
+	Channel   int
+
+	Backend string
+
+	CaptureFile string
+
+	Error string
 }

@@ -2,65 +2,64 @@ package cli
 
 import (
 	"fmt"
+	"strings"
 
-	"github.com/MichaelVanDerBlond/hashcenter/internal/system"
+	"github.com/MichaelVanDerBlond/hashcenter/internal/inventory"
 )
 
 func Inventory() error {
-	info, err := system.Collect()
+
+	inv, err := inventory.List()
 	if err != nil {
 		return err
 	}
 
 	fmt.Println("========================================")
-	fmt.Println("           HASHCENTER INVENTORY")
+	fmt.Println("        HASHCENTER INVENTORY")
 	fmt.Println("========================================")
 	fmt.Println()
 
-	fmt.Println("[System]")
-	fmt.Printf("OS           : %s\n", info.OS)
-	fmt.Printf("Kernel       : %s\n", info.Kernel)
-	fmt.Println()
+	fmt.Printf("%-3s %-18s %-6s %-12s %-10s %-6s %-8s %s\n",
+		"ID",
+		"INTERFACE",
+		"PHY",
+		"DRIVER",
+		"MODE",
+		"STATE",
+		"MONITOR",
+		"BANDS",
+	)
 
-	fmt.Println("[CPU]")
-	fmt.Printf("Vendor       : %s\n", info.CPU.Vendor)
-	fmt.Printf("Model        : %s\n", info.CPU.Model)
-	fmt.Printf("Architecture : %s\n", info.CPU.Arch)
-	fmt.Printf("Cores        : %d\n", info.CPU.Cores)
-	fmt.Printf("Threads      : %d\n", info.CPU.Threads)
-	fmt.Println()
+	fmt.Println("----------------------------------------------------------------------------")
 
-	fmt.Println("[Memory]")
-	fmt.Printf("Total        : %.2f GB\n", float64(info.Memory.Total)/(1024*1024*1024))
-	fmt.Printf("Available    : %.2f GB\n", float64(info.Memory.Available)/(1024*1024*1024))
-	fmt.Printf("Free         : %.2f GB\n", float64(info.Memory.Free)/(1024*1024*1024))
-	fmt.Println()
+	for _, a := range inv.Adapters {
 
-	fmt.Println("[Disk]")
-	fmt.Printf("Mount        : %s\n", info.Disk.Path)
-	fmt.Printf("Total        : %.2f GB\n", float64(info.Disk.Total)/(1024*1024*1024))
-	fmt.Printf("Available    : %.2f GB\n", float64(info.Disk.Available)/(1024*1024*1024))
-	fmt.Println()
-
-	fmt.Println("[GPU]")
-	if info.GPU.Name == "" {
-		fmt.Println("Not detected")
-	} else {
-		fmt.Printf("Model        : %s\n", info.GPU.Name)
-		fmt.Printf("Driver       : %s\n", info.GPU.Driver)
-		fmt.Printf("Memory       : %s / %s MiB\n", info.GPU.MemoryUsed, info.GPU.MemoryTotal)
-		fmt.Printf("Temperature  : %s °C\n", info.GPU.Temperature)
-		fmt.Printf("Load         : %s %%\n", info.GPU.Utilization)
-	}
-	fmt.Println()
-
-	fmt.Println("[Tools]")
-	for _, tool := range info.Tools {
-		if tool.Present {
-			fmt.Printf("[OK]   %-15s %s\n", tool.Name, tool.Version)
-		} else {
-			fmt.Printf("[MISS] %-15s not installed\n", tool.Name)
+		state := "DOWN"
+		if a.Up {
+			state = "UP"
 		}
+
+		monitor := "NO"
+		if a.MonitorSupported {
+			monitor = "YES"
+		}
+
+		bands := "-"
+		if len(a.Bands) > 0 {
+			bands = strings.Join(a.Bands, ", ")
+		}
+
+		fmt.Printf(
+			"%-3d %-18s %-6s %-12s %-10s %-6s %-8s %s\n",
+			a.ID,
+			a.Interface,
+			a.Phy,
+			a.Driver,
+			a.Mode,
+			state,
+			monitor,
+			bands,
+		)
 	}
 
 	return nil

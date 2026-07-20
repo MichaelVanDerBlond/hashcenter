@@ -28,6 +28,23 @@ CREATE TABLE IF NOT EXISTS dictionaries(
 	favorite INTEGER NOT NULL DEFAULT 0,
 	priority INTEGER NOT NULL DEFAULT 1000
 );
+
+CREATE TABLE IF NOT EXISTS sessions(
+	id TEXT PRIMARY KEY,
+	state TEXT NOT NULL,
+
+	started TEXT,
+	finished TEXT,
+
+	interface TEXT,
+	channel INTEGER,
+
+	backend TEXT,
+
+	capture_file TEXT,
+
+	error TEXT
+);
 `
 
 	if _, err := db.Exec(schema); err != nil {

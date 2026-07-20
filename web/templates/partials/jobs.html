@@ -1,0 +1,79 @@
+{{ define "jobs" }}
+
+<div class="card mb-4">
+
+    <div class="card-header">
+        Active Jobs
+    </div>
+
+    <div class="card-body p-0">
+
+        <table class="table table-dark table-striped table-hover mb-0">
+
+            <thead>
+
+            <tr>
+
+                <th>Session</th>
+
+                <th>State</th>
+
+                <th>Backend</th>
+
+                <th>Progress</th>
+
+                <th>Speed</th>
+
+                <th>ETA</th>
+
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            {{ if .Jobs }}
+
+                {{ range .Jobs }}
+
+                <tr>
+
+                    <td>{{ .SessionID }}</td>
+
+                    <td>{{ .Status.State }}</td>
+
+                    <td>{{ .Runner.Backend }}</td>
+
+                    <td>{{ .Status.Progress }}</td>
+
+                    <td>{{ .Status.Speed }}</td>
+
+                    <td>{{ .Status.ETA }}</td>
+
+                </tr>
+
+                {{ end }}
+
+            {{ else }}
+
+                <tr>
+
+                    <td colspan="6" class="text-center text-secondary">
+
+                        No active jobs
+
+                    </td>
+
+                </tr>
+
+            {{ end }}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{{ end }}

@@ -8,23 +8,11 @@ import (
 func Execute() error {
 
 	if len(os.Args) < 2 {
-		printHelp()
+		usage()
 		return nil
 	}
 
 	switch os.Args[1] {
-
-	case "version":
-		return Version()
-
-	case "doctor":
-		return Doctor()
-
-	case "inventory":
-		return Inventory()
-
-	case "capture":
-		return Capture()
 
 	case "analyze":
 		return Analyze()
@@ -35,36 +23,42 @@ func Execute() error {
 	case "list":
 		return List()
 
-	case "benchmark":
-		return Benchmark()
+	case "inventory":
+		return Inventory()
 
-	case "help":
-		printHelp()
-		return nil
+	case "capture":
+		return Capture()
+
+	case "attack":
+		return Attack()
+
+	case "sessions":
+		return Sessions()
+
+	case "status":
+		return Status()
+
+	case "serve":
+		return Serve()
 
 	default:
-		fmt.Printf("Unknown command: %s\n\n", os.Args[1])
-		printHelp()
-		return fmt.Errorf("unknown command")
+		usage()
+		return nil
 	}
 }
 
-func printHelp() {
+func usage() {
 
 	fmt.Println("HashCenter")
 	fmt.Println()
-
 	fmt.Println("Usage:")
-	fmt.Println("  hashcenter <command>")
-	fmt.Println()
-
-	fmt.Println("Commands:")
-	fmt.Println("  version")
-	fmt.Println("  doctor")
-	fmt.Println("  inventory")
-	fmt.Println("  capture")
-	fmt.Println("  analyze")
-	fmt.Println("  convert")
-	fmt.Println("  list")
-	fmt.Println("  benchmark")
+	fmt.Println("  hashcenter analyze <capture>")
+	fmt.Println("  hashcenter convert <capture>")
+	fmt.Println("  hashcenter list")
+	fmt.Println("  hashcenter inventory")
+	fmt.Println("  hashcenter capture --channel 6 --time 30 --output office")
+	fmt.Println("  hashcenter attack")
+	fmt.Println("  hashcenter sessions")
+	fmt.Println("  hashcenter status")
+	fmt.Println("  hashcenter serve")
 }
