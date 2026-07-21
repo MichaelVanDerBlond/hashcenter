@@ -1,15 +1,31 @@
 package workflow
 
-import "time"
+import (
+	"time"
+
+	"github.com/MichaelVanDerBlond/hashcenter/internal/analyze"
+	"github.com/MichaelVanDerBlond/hashcenter/internal/convert"
+	"github.com/MichaelVanDerBlond/hashcenter/internal/jobs"
+)
 
 type Context struct {
 	ID string
+
+	SessionID string
 
 	Capture string
 
 	HashFile string
 
+	Dictionary string
+
 	Dictionaries []string
+
+	AttackMode int
+
+	HashMode int
+
+	Extra []string
 
 	OutputDir string
 
@@ -20,6 +36,12 @@ type Context struct {
 	CurrentStage string
 
 	CompletedStages []string
+
+	Analyze *analyze.Report
+
+	Convert *convert.Result
+
+	Result *jobs.Result
 
 	Values map[string]any
 }

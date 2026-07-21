@@ -1,12 +1,22 @@
 package convert
 
-func Run(path string) (*Result, error) {
+import "github.com/MichaelVanDerBlond/hashcenter/internal/system"
 
-	r := &Result{
-		Input: path,
+func Run(path string) (*Result, error) {
+	plan, _, err := system.ExecuteConversion(path)
+	if err != nil {
+		return nil, err
 	}
 
-	// Реальная конвертация появится следующим релизом.
+	r := &Result{
+		Input:   path,
+		Success: true,
+	}
+
+	if plan != nil {
+		r.Output = plan.OutputFile
+		r.Backend = plan.Backend
+	}
 
 	return r, nil
 }

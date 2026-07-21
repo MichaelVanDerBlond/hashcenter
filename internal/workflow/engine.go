@@ -5,11 +5,6 @@ import (
 	"fmt"
 )
 
-type Stage interface {
-	Name() string
-	Run(context.Context, *Context) error
-}
-
 type Engine struct {
 	stages []Stage
 }
@@ -26,7 +21,13 @@ func (e *Engine) Add(stage Stage) *Engine {
 }
 
 func (e *Engine) Run(ctx context.Context, wf *Context) error {
+
 	for _, stage := range e.stages {
+
+		if !stage.ShouldRun(wf) {
+			continue
+		}
+
 		wf.CurrentStage = stage.Name()
 
 		if err := stage.Run(ctx, wf); err != nil {

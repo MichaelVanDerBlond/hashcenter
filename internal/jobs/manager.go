@@ -12,8 +12,17 @@ type Job struct {
 	Dictionary string
 
 	AttackMode int
+	HashMode   int
 
-	HashMode int
+	Rule string
+
+	Mask string
+
+	SessionName string
+
+	Device string
+
+	Workload int
 
 	Extra []string
 }
