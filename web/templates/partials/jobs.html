@@ -1,79 +1,43 @@
-{{ define "jobs" }}
+<div class="card">
 
-<div class="card mb-4">
+    <h2>Очередь атак</h2>
 
-    <div class="card-header">
-        Active Jobs
-    </div>
+    <div id="queue">
 
-    <div class="card-body p-0">
+    {{if .Queue}}
 
-        <table class="table table-dark table-striped table-hover mb-0">
+        {{range .Queue}}
 
-            <thead>
+        <div class="job-card">
 
-            <tr>
+            <div><strong>ID:</strong> {{.ID}}</div>
 
-                <th>Session</th>
+            <div><strong>Hash:</strong> {{.HashFile}}</div>
 
-                <th>State</th>
+            <div><strong>Dictionary:</strong> {{.Dictionary}}</div>
 
-                <th>Backend</th>
+            <div><strong>Status:</strong> {{.State}}</div>
 
-                <th>Progress</th>
+            <div><strong>Started:</strong> {{.Started}}</div>
 
-                <th>Speed</th>
+            <div><strong>Finished:</strong> {{.Finished}}</div>
 
-                <th>ETA</th>
+        </div>
 
-            </tr>
+        <br>
 
-            </thead>
+        {{end}}
 
-            <tbody>
+    {{else}}
 
-            {{ if .Jobs }}
+        <div class="job-card">
 
-                {{ range .Jobs }}
+            Очередь пуста
 
-                <tr>
+        </div>
 
-                    <td>{{ .SessionID }}</td>
-
-                    <td>{{ .Status.State }}</td>
-
-                    <td>{{ .Runner.Backend }}</td>
-
-                    <td>{{ .Status.Progress }}</td>
-
-                    <td>{{ .Status.Speed }}</td>
-
-                    <td>{{ .Status.ETA }}</td>
-
-                </tr>
-
-                {{ end }}
-
-            {{ else }}
-
-                <tr>
-
-                    <td colspan="6" class="text-center text-secondary">
-
-                        No active jobs
-
-                    </td>
-
-                </tr>
-
-            {{ end }}
-
-            </tbody>
-
-        </table>
+    {{end}}
 
     </div>
 
 </div>
-
-{{ end }}

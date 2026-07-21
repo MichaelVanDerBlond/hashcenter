@@ -1,49 +1,40 @@
-{{ define "dictionaries" }}
-
 <div class="card">
 
-    <div class="card-header">
-        📚 Все словари ({{ .OtherCount }})
-    </div>
+    <h2>Словари</h2>
 
-    <div class="card-body p-0">
+    <table class="table">
 
-        <table class="table table-striped table-hover mb-0">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Название</th>
+            <th>Размер</th>
+        </tr>
+        </thead>
 
-            <thead>
-            <tr>
-                <th width="40"></th>
-                <th>Словарь</th>
-                <th width="120">Размер</th>
-            </tr>
-            </thead>
+        <tbody>
 
-            <tbody>
+        {{range .Others}}
 
-            {{ range .Others }}
+        <tr>
 
-            <tr>
-                <td class="text-center">☆</td>
-                <td>{{ .Name }}</td>
-                <td>{{ .Size }}</td>
-            </tr>
+            <td>
+                <input
+                    type="checkbox"
+                    class="dictionary"
+                    value="{{.Path}}">
+            </td>
 
-            {{ else }}
+            <td>{{.Name}}</td>
 
-            <tr>
-                <td colspan="3" class="text-center text-muted">
-                    Нет словарей
-                </td>
-            </tr>
+            <td>{{.Size}}</td>
 
-            {{ end }}
+        </tr>
 
-            </tbody>
+        {{end}}
 
-        </table>
+        </tbody>
 
-    </div>
+    </table>
 
 </div>
-
-{{ end }}

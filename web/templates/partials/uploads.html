@@ -1,55 +1,47 @@
-{{ define "uploads" }}
+<div class="card">
 
-<div class="card mb-4">
+    <h2>Файлы хешей</h2>
 
-    <div class="card-header">
-        📂 Загруженные файлы
-    </div>
+    <form id="attackForm">
 
-    <div class="card-body p-0">
-
-        <table class="table table-striped table-hover mb-0">
+        <table class="table">
 
             <thead>
             <tr>
-                <th width="40"></th>
+                <th></th>
                 <th>Файл</th>
-                <th width="120">Размер</th>
-                <th width="120">Тип</th>
-                <th width="180">Статус</th>
+                <th>Размер</th>
+                <th>Статус</th>
             </tr>
             </thead>
 
             <tbody>
 
-            {{ range .Uploads }}
+            {{range .Uploads}}
 
             <tr>
+
                 <td>
-                    <input type="checkbox" name="uploads" value="{{ .Name }}">
+                    <input
+                        type="radio"
+                        name="hashfile"
+                        value="{{.Name}}">
                 </td>
-                <td>{{ .Name }}</td>
-                <td>{{ .Size }}</td>
-                <td>{{ .Type }}</td>
-                <td>{{ .Status }}</td>
+
+                <td>{{.Name}}</td>
+
+                <td>{{.Size}}</td>
+
+                <td>{{.Status}}</td>
+
             </tr>
 
-            {{ else }}
-
-            <tr>
-                <td colspan="5" class="text-center text-muted">
-                    Загруженных файлов нет
-                </td>
-            </tr>
-
-            {{ end }}
+            {{end}}
 
             </tbody>
 
         </table>
 
-    </div>
+    </form>
 
 </div>
-
-{{ end }}

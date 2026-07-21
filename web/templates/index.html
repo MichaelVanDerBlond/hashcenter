@@ -1,62 +1,139 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="UTF-8">
 
-<title>{{ .Title }}</title>
+<title>{{.Title}}</title>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
 
 </head>
 
-<body class="bg-dark">
+<body>
 
-<div class="container py-4">
+<h1>{{.Title}}</h1>
 
-<h2 class="text-light mb-4">
-HashCenter R0.1
-</h2>
+<div class="container">
 
-<div class="card mb-4">
+{{template "uploads.html" .}}
 
-<div class="card-header">
-Upload Hash Files
-</div>
+{{template "favorites.html" .}}
 
-<div class="card-body">
+{{template "dictionaries.html" .}}
 
-<form
-action="/upload"
-method="post"
-enctype="multipart/form-data">
-
-<input
-class="form-control mb-3"
-type="file"
-name="files"
-multiple>
-
-<button class="btn btn-primary">
-Upload
-</button>
-
-</form>
+{{template "jobs.html" .}}
 
 </div>
 
-</div>
+<script>
 
-{{ template "uploads" . }}
+async function refreshQueue(){
 
-{{ template "jobs" . }}
+    const r=await fetch("/api/queue");
 
-{{ template "favorites" . }}
+    if(!r.ok)
+        return;
 
-{{ template "dictionaries" . }}
+    const jobs=await r.json();
 
-</div>
+    const root=document.getElementById("queue");
+
+    root.innerHTML="";
+
+    if(jobs.length===0){
+
+        root.innerHTML='<div class="job-card">Очередь пуста</div>';
+
+        return;
+    }
+
+    for(const j of jobs){
+
+        const card=document.createElement("div");
+
+        card.className="job-card";
+
+        card.innerHTML=
+        "<div><b>ID:</b> "+j.id+"</div>"+
+        "<div><b>Hash:</b> "+j.hash_file+"</div>"+
+        "<div><b>Dictionary:</b> "+j.dictionary+"</div>"+
+        "<div><b>Status:</b> "+j.state+"</div>"+
+        "<div><b>Started:</b> "+(j.started??"")+"</div>"+
+        "<div><b>Finished:</b> "+(j.finished??"")+"</div>";
+
+        root.appendChild(card);
+
+        root.appendChild(document.createElement("br"));
+    }
+}
+
+async function startAttack(){
+
+    const hash=document.querySelector('input[name="hashfile"]:checked');
+
+    if(!hash){
+
+        alert("Выберите файл");
+
+        return;
+    }
+
+    const dicts=[];
+
+    document.querySelectorAll(".dictionary:checked").forEach(e=>dicts.push(e.value));
+
+    if(dicts.length===0){
+
+        alert("Выберите словари");
+
+        return;
+    }
+
+    const res=await fetch("/api/attack",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+
+            hash_file:hash.value,
+
+            dictionaries:dicts,
+
+            hash_mode:22000,
+
+            attack_mode:0,
+
+            workload:3
+
+        })
+
+    });
+
+    if(!res.ok){
+
+        alert(await res.text());
+
+        return;
+    }
+
+    refreshQueue();
+}
+
+document
+.getElementById("startAttack")
+.addEventListener("click",startAttack);
+
+refreshQueue();
+
+setInterval(refreshQueue,2000);
+
+</script>
 
 </body>
 

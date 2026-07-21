@@ -46,6 +46,8 @@ func LoadIndexData() (IndexData, error) {
 
 		Jobs: jobs.Active(),
 
+		Queue: listQueueJobs(),
+
 		Uploads: uploads,
 
 		Favorites: favorites,

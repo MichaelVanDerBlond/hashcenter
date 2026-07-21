@@ -10,6 +10,8 @@ type IndexData struct {
 
 	Jobs []*jobs.Runtime
 
+	Queue []*QueueJob
+
 	Uploads []models.Upload
 
 	Favorites []models.Dictionary

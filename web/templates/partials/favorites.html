@@ -1,49 +1,46 @@
-{{ define "favorites" }}
+<div class="card">
 
-<div class="card mb-4">
+    <h2>Избранные словари</h2>
 
-    <div class="card-header bg-warning text-dark">
-        ⭐ Избранные ({{ .FavoriteCount }})
-    </div>
+    <table class="table">
 
-    <div class="card-body p-0">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Название</th>
+            <th>Размер</th>
+        </tr>
+        </thead>
 
-        <table class="table table-striped table-hover mb-0">
+        <tbody>
 
-            <thead>
-            <tr>
-                <th width="40"></th>
-                <th>Словарь</th>
-                <th width="120">Размер</th>
-            </tr>
-            </thead>
+        {{range .Favorites}}
 
-            <tbody>
+        <tr>
 
-            {{ range .Favorites }}
+            <td>
+                <input
+                    type="checkbox"
+                    class="dictionary"
+                    value="{{.Path}}">
+            </td>
 
-            <tr>
-                <td class="text-center">⭐</td>
-                <td>{{ .Name }}</td>
-                <td>{{ .Size }}</td>
-            </tr>
+            <td>{{.Name}}</td>
 
-            {{ else }}
+            <td>{{.Size}}</td>
 
-            <tr>
-                <td colspan="3" class="text-center text-muted">
-                    Нет избранных словарей
-                </td>
-            </tr>
+        </tr>
 
-            {{ end }}
+        {{end}}
 
-            </tbody>
+        </tbody>
 
-        </table>
+    </table>
 
-    </div>
+    <br>
+
+    <button id="startAttack">
+        Start Attack
+    </button>
 
 </div>
-
-{{ end }}
