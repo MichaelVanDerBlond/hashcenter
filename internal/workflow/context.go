@@ -25,6 +25,16 @@ type Context struct {
 
 	HashMode int
 
+	Rule string
+
+	Mask string
+
+	SessionName string
+
+	Device string
+
+	Workload int
+
 	Extra []string
 
 	OutputDir string

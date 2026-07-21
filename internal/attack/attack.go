@@ -15,6 +15,13 @@ func Execute(ctx context.Context, job Job) error {
 	wf.Dictionary = job.Dictionary
 	wf.HashMode = job.HashMode
 	wf.AttackMode = job.AttackMode
+
+	wf.Rule = job.Rule
+	wf.Mask = job.Mask
+	wf.SessionName = job.SessionName
+	wf.Device = job.Device
+	wf.Workload = job.Workload
+
 	wf.Extra = append([]string(nil), job.Extra...)
 
 	engine := workflow.NewDefaultPipeline()
