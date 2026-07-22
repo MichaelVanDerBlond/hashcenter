@@ -42,6 +42,10 @@ func parseTime(s string) time.Time {
 }
 
 func (r *SQLiteSessionRepository) Save(s *session.Session) error {
+	if r == nil || r.db == nil {
+		return errors.New("nil repository")
+	}
+
 	if s == nil {
 		return errors.New("nil session")
 	}
@@ -75,6 +79,10 @@ VALUES(?,?,?,?,?,?,?,?,?)
 }
 
 func (r *SQLiteSessionRepository) Update(s *session.Session) error {
+	if r == nil || r.db == nil {
+		return errors.New("nil repository")
+	}
+
 	if s == nil {
 		return errors.New("nil session")
 	}
@@ -107,6 +115,9 @@ WHERE id=?
 }
 
 func (r *SQLiteSessionRepository) Get(id string) (*session.Session, error) {
+	if r == nil || r.db == nil {
+		return nil, errors.New("nil repository")
+	}
 
 	var s session.Session
 
@@ -151,6 +162,9 @@ WHERE id=?
 }
 
 func (r *SQLiteSessionRepository) List() ([]session.Session, error) {
+	if r == nil || r.db == nil {
+		return nil, errors.New("nil repository")
+	}
 
 	rows, err := r.db.Query(`
 SELECT
@@ -175,7 +189,6 @@ ORDER BY started DESC
 	var sessions []session.Session
 
 	for rows.Next() {
-
 		var s session.Session
 
 		var started string
@@ -210,6 +223,10 @@ ORDER BY started DESC
 }
 
 func (r *SQLiteSessionRepository) Delete(id string) error {
+	if r == nil || r.db == nil {
+		return errors.New("nil repository")
+	}
+
 	if id == "" {
 		return nil
 	}
@@ -225,6 +242,10 @@ WHERE id=?
 }
 
 func (r *SQLiteSessionRepository) Exists(id string) (bool, error) {
+	if r == nil || r.db == nil {
+		return false, errors.New("nil repository")
+	}
+
 	var count int
 
 	err := r.db.QueryRow(`
