@@ -4,14 +4,18 @@ func (r *Result) Success() bool {
 	return r != nil && r.ExitCode == 0
 }
 
+func (r *Result) HasState(state string) bool {
+	return r != nil && r.State == state
+}
+
 func (r *Result) Cracked() bool {
-	return r != nil && r.State == "Cracked"
+	return r.HasState("Cracked")
 }
 
 func (r *Result) Exhausted() bool {
-	return r != nil && r.State == "Exhausted"
+	return r.HasState("Exhausted")
 }
 
 func (r *Result) Running() bool {
-	return r != nil && r.State == "Running"
+	return r.HasState("Running")
 }
