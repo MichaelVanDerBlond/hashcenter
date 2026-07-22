@@ -69,8 +69,7 @@ func (r *Runner) Start(ctx context.Context, args ...string) (*Result, *Status, e
 	go copyPipe(&stderr, stderrPipe, false)
 
 	go func() {
-
-		_ = cmd.Wait()
+		result.Error = cmd.Wait()
 
 		wg.Wait()
 

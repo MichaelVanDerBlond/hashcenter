@@ -17,6 +17,8 @@ type Result struct {
 
 	Stderr string `json:"stderr"`
 
+	Error error `json:"-"`
+
 	// Parsed statistics
 
 	State string `json:"state"`
