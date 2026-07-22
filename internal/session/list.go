@@ -1,6 +1,9 @@
 package session
 
 func (m *Manager) List() []*Runtime {
+	if m == nil {
+		return nil
+	}
 
 	m.mu.RLock()
 	defer m.mu.RUnlock()
