@@ -28,10 +28,13 @@ func NewStatus() *Status {
 }
 
 func (s *Status) Snapshot() Status {
-
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
+	return s.snapshotLocked()
+}
+
+func (s *Status) snapshotLocked() Status {
 	return Status{
 		State:      s.State,
 		Speed:      s.Speed,
