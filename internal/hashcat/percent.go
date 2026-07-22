@@ -8,16 +8,15 @@ import (
 var percentRE = regexp.MustCompile(`\(([0-9]+(?:\.[0-9]+)?)%\)`)
 
 func percent(line string) float64 {
-
-	m := percentRE.FindStringSubmatch(line)
-	if len(m) != 2 {
+	match := percentRE.FindStringSubmatch(line)
+	if len(match) != 2 {
 		return 0
 	}
 
-	v, err := strconv.ParseFloat(m[1], 64)
+	value, err := strconv.ParseFloat(match[1], 64)
 	if err != nil {
 		return 0
 	}
 
-	return v
+	return value
 }
