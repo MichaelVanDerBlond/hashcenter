@@ -4,18 +4,15 @@ import "os"
 
 func (r *Runner) PID() int {
 
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
-	if r.cmd == nil || r.cmd.Process == nil {
+	process := r.Process()
+	if process == nil {
 		return 0
 	}
 
-	return r.cmd.Process.Pid
+	return process.Pid
 }
 
 func (r *Runner) Running() bool {
-
 	return r.PID() != 0
 }
 
