@@ -208,3 +208,36 @@ ORDER BY started DESC
 
 	return sessions, nil
 }
+
+func (r *SQLiteSessionRepository) Delete(id string) error {
+	if id == "" {
+		return nil
+	}
+
+	_, err := r.db.Exec(`
+DELETE FROM sessions
+WHERE id=?
+`,
+		id,
+	)
+
+	return err
+}
+
+func (r *SQLiteSessionRepository) Exists(id string) (bool, error) {
+	var count int
+
+	err := r.db.QueryRow(`
+SELECT COUNT(*)
+FROM sessions
+WHERE id=?
+`,
+		id,
+	).Scan(&count)
+
+	if err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
+}

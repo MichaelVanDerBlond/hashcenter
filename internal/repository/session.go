@@ -10,4 +10,8 @@ type SessionRepository interface {
 	Get(id string) (*session.Session, error)
 
 	List() ([]session.Session, error)
+
+	Delete(id string) error
+
+	Exists(id string) (bool, error)
 }
