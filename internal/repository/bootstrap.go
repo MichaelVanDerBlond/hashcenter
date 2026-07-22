@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
 
@@ -9,6 +10,9 @@ import (
 )
 
 func (r *DictionaryRepository) Bootstrap(dicts []models.Dictionary) error {
+	if r == nil || r.db == nil {
+		return errors.New("nil repository")
+	}
 
 	for _, d := range dicts {
 
@@ -52,13 +56,15 @@ WHERE path=?
 		if err != nil {
 			return err
 		}
-
 	}
 
 	return nil
 }
 
 func (r *DictionaryRepository) RemoveMissing() error {
+	if r == nil || r.db == nil {
+		return errors.New("nil repository")
+	}
 
 	rows, err := r.db.Query(`
 SELECT path
@@ -67,7 +73,6 @@ FROM dictionaries
 	if err != nil {
 		return err
 	}
-
 	defer rows.Close()
 
 	var path string
@@ -90,7 +95,6 @@ WHERE path=?
 		); err != nil {
 			return err
 		}
-
 	}
 
 	return rows.Err()
