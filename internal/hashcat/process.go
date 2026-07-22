@@ -3,12 +3,11 @@ package hashcat
 import "os"
 
 func (r *Runner) PID() int {
-	process := r.Process()
-	if process == nil {
-		return 0
+	if process := r.Process(); process != nil {
+		return process.Pid
 	}
 
-	return process.Pid
+	return 0
 }
 
 func (r *Runner) Running() bool {
