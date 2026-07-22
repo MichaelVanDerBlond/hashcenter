@@ -19,3 +19,15 @@ type Session struct {
 
 	Error string
 }
+
+func (s *Session) IsRunning() bool {
+	return s != nil && s.State == Running
+}
+
+func (s *Session) IsFinished() bool {
+	return s != nil && s.State == Finished
+}
+
+func (s *Session) IsFailed() bool {
+	return s != nil && s.State == Failed
+}
