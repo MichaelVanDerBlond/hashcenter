@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"errors"
 	"time"
 
 	"github.com/MichaelVanDerBlond/hashcenter/internal/session"
@@ -41,6 +42,9 @@ func parseTime(s string) time.Time {
 }
 
 func (r *SQLiteSessionRepository) Save(s *session.Session) error {
+	if s == nil {
+		return errors.New("nil session")
+	}
 
 	_, err := r.db.Exec(`
 INSERT INTO sessions(
@@ -71,6 +75,9 @@ VALUES(?,?,?,?,?,?,?,?,?)
 }
 
 func (r *SQLiteSessionRepository) Update(s *session.Session) error {
+	if s == nil {
+		return errors.New("nil session")
+	}
 
 	_, err := r.db.Exec(`
 UPDATE sessions
