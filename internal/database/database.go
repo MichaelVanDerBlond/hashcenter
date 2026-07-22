@@ -7,7 +7,7 @@ import (
 	_ "modernc.org/sqlite"
 )
 
-const DBPath = "data/hashcenter.db"
+const DefaultDBPath = "data/hashcenter.db"
 
 const schema = `
 PRAGMA foreign_keys = ON;
@@ -41,12 +41,16 @@ CREATE TABLE IF NOT EXISTS sessions(
 `
 
 func Open() (*sql.DB, error) {
-
 	if err := os.MkdirAll("data", 0755); err != nil {
 		return nil, err
 	}
 
-	db, err := sql.Open("sqlite", DBPath)
+	dbPath := os.Getenv("HASHCENTER_DB")
+	if dbPath == "" {
+		dbPath = DefaultDBPath
+	}
+
+	db, err := sql.Open("sqlite", dbPath)
 	if err != nil {
 		return nil, err
 	}
