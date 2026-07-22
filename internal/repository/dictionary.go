@@ -80,21 +80,12 @@ WHERE favorite=?
 	var result []models.Dictionary
 
 	for rows.Next() {
-		var d models.Dictionary
-		var fav int
-
-		if err := rows.Scan(
-			&d.Path,
-			&d.Name,
-			&d.Size,
-			&fav,
-			&d.Priority,
-		); err != nil {
+		d, err := scanDictionary(rows)
+		if err != nil {
 			return nil, err
 		}
 
-		d.Favorite = fav == 1
-		result = append(result, d)
+		result = append(result, *d)
 	}
 
 	return result, rows.Err()
@@ -163,10 +154,7 @@ func (r *DictionaryRepository) Get(path string) (*models.Dictionary, error) {
 		return nil, errors.New("nil repository")
 	}
 
-	var d models.Dictionary
-	var favoriteValue int
-
-	err := r.db.QueryRow(`
+	row := r.db.QueryRow(`
 SELECT
 	path,
 	name,
@@ -177,19 +165,47 @@ FROM dictionaries
 WHERE path=?
 `,
 		path,
-	).Scan(
+	)
+
+	var d models.Dictionary
+	var favoriteValue int
+
+	err := row.Scan(
 		&d.Path,
 		&d.Name,
 		&d.Size,
 		&favoriteValue,
 		&d.Priority,
 	)
-
 	if err != nil {
 		return nil, err
 	}
 
 	d.Favorite = favoriteValue == 1
+
+	return &d, nil
+}
+
+type dictionaryScanner interface {
+	Scan(dest ...any) error
+}
+
+func scanDictionary(s dictionaryScanner) (*models.Dictionary, error) {
+	var d models.Dictionary
+	var favorite int
+
+	err := s.Scan(
+		&d.Path,
+		&d.Name,
+		&d.Size,
+		&favorite,
+		&d.Priority,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	d.Favorite = favorite == 1
 
 	return &d, nil
 }
