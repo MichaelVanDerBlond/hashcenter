@@ -5,8 +5,15 @@ import (
 	"strings"
 )
 
-func SpeedHPS(s string) float64 {
+var speedUnits = map[string]float64{
+	"H/S":  1,
+	"KH/S": 1_000,
+	"MH/S": 1_000_000,
+	"GH/S": 1_000_000_000,
+	"TH/S": 1_000_000_000_000,
+}
 
+func SpeedHPS(s string) float64 {
 	fields := strings.Fields(s)
 	if len(fields) < 2 {
 		return 0
@@ -17,22 +24,8 @@ func SpeedHPS(s string) float64 {
 		return 0
 	}
 
-	switch strings.ToUpper(fields[1]) {
-
-	case "H/S":
-		return value
-
-	case "KH/S":
-		return value * 1_000
-
-	case "MH/S":
-		return value * 1_000_000
-
-	case "GH/S":
-		return value * 1_000_000_000
-
-	case "TH/S":
-		return value * 1_000_000_000_000
+	if mul, ok := speedUnits[strings.ToUpper(fields[1])]; ok {
+		return value * mul
 	}
 
 	return value
