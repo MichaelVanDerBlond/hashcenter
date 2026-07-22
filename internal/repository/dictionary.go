@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"errors"
 
 	"github.com/MichaelVanDerBlond/hashcenter/internal/models"
 )
@@ -15,6 +16,9 @@ func NewDictionaryRepository(db *sql.DB) *DictionaryRepository {
 }
 
 func (r *DictionaryRepository) Sync(d models.Dictionary) error {
+	if r == nil || r.db == nil {
+		return errors.New("nil repository")
+	}
 
 	_, err := r.db.Exec(`
 INSERT INTO dictionaries(path,name,size)
