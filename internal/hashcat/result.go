@@ -33,3 +33,7 @@ type Result struct {
 
 	ETA string `json:"eta"`
 }
+
+func (r *Result) HasError() bool {
+	return r != nil && r.Error != nil
+}
