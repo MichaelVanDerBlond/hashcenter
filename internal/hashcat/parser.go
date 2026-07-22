@@ -6,6 +6,11 @@ type Parser struct {
 	Status *Status
 }
 
+type parserRule struct {
+	prefix string
+	update func(string)
+}
+
 func NewParser() *Parser {
 	return &Parser{
 		Status: NewStatus(),
@@ -13,28 +18,23 @@ func NewParser() *Parser {
 }
 
 func (p *Parser) Parse(line string) {
-
 	line = strings.TrimSpace(line)
-
 	if line == "" {
 		return
 	}
 
-	switch {
+	rules := []parserRule{
+		{"Speed.#", p.Status.SetSpeed},
+		{"Progress", p.Status.SetProgress},
+		{"Recovered", p.Status.SetRecovered},
+		{"Time.Estimated", p.Status.SetETA},
+		{"Status", p.Status.SetState},
+	}
 
-	case strings.HasPrefix(line, "Speed.#"):
-		p.Status.SetSpeed(line)
-
-	case strings.HasPrefix(line, "Progress"):
-		p.Status.SetProgress(line)
-
-	case strings.HasPrefix(line, "Recovered"):
-		p.Status.SetRecovered(line)
-
-	case strings.HasPrefix(line, "Time.Estimated"):
-		p.Status.SetETA(line)
-
-	case strings.HasPrefix(line, "Status"):
-		p.Status.SetState(line)
+	for _, rule := range rules {
+		if strings.HasPrefix(line, rule.prefix) {
+			rule.update(line)
+			return
+		}
 	}
 }
