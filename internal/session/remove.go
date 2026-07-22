@@ -1,8 +1,7 @@
 package session
 
 func (m *Manager) Remove(id string) {
-
-	if id == "" {
+	if m == nil || id == "" {
 		return
 	}
 
