@@ -83,9 +83,12 @@ func (r *Runner) Start(ctx context.Context, args ...string) (*Result, *Status, e
 			result.ExitCode = cmd.ProcessState.ExitCode()
 		}
 
-		parser.Status.SetState("finished")
-
 		stats := parser.Status.Stats()
+
+		if stats.State == "" || stats.State == "starting" {
+			parser.Status.SetState("finished")
+			stats = parser.Status.Stats()
+		}
 
 		result.State = stats.State
 		result.Speed = stats.Speed
