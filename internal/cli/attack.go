@@ -40,13 +40,18 @@ func Attack() error {
 		return errors.New("missing --dict")
 	}
 
-	dictionaries := []string{}
+	var dictionaries []string
+
 	if *dict != "" {
 		for _, d := range strings.Split(*dict, ",") {
 			d = strings.TrimSpace(d)
 			if d != "" {
 				dictionaries = append(dictionaries, d)
 			}
+		}
+
+		if len(dictionaries) == 0 {
+			return errors.New("no valid dictionaries specified")
 		}
 	}
 
