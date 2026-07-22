@@ -12,7 +12,7 @@ import (
 
 func Capture() error {
 
-	fs := flag.NewFlagSet("capture", flag.ExitOnError)
+	fs := flag.NewFlagSet("capture", flag.ContinueOnError)
 
 	channel := fs.Int("channel", 1, "Wi-Fi channel")
 	duration := fs.Int("time", 30, "Capture duration (seconds)")
