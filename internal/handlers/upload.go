@@ -25,6 +25,10 @@ func UploadHash(c *gin.Context) {
 	}
 
 	files := form.File["files"]
+	if len(files) == 0 {
+		c.String(http.StatusBadRequest, "no files uploaded")
+		return
+	}
 
 	for _, file := range files {
 
