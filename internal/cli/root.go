@@ -41,6 +41,15 @@ func Execute() error {
 	case "serve":
 		return Serve()
 
+	case "doctor":
+		return Doctor()
+
+	case "benchmark":
+		return Benchmark()
+
+	case "version":
+		return Version()
+
 	default:
 		usage()
 		return nil
@@ -60,5 +69,8 @@ func usage() {
 	fmt.Println("  hashcenter attack")
 	fmt.Println("  hashcenter sessions")
 	fmt.Println("  hashcenter status")
+	fmt.Println("  hashcenter doctor")
+	fmt.Println("  hashcenter benchmark")
+	fmt.Println("  hashcenter version")
 	fmt.Println("  hashcenter serve")
 }
