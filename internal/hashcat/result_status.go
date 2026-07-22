@@ -4,6 +4,10 @@ func (r *Result) Success() bool {
 	return r != nil && r.ExitCode == 0
 }
 
+func (r *Result) Failed() bool {
+	return !r.Success()
+}
+
 func (r *Result) HasState(state string) bool {
 	return r != nil && r.State == state
 }
