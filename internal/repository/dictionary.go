@@ -37,68 +37,39 @@ DO UPDATE SET
 }
 
 func (r *DictionaryRepository) Favorites(search string) ([]models.Dictionary, error) {
-
-	query := `
-SELECT path,name,size,favorite,priority
-FROM dictionaries
-WHERE favorite=1
-`
-
-	args := []any{}
-
-	if search != "" {
-		query += " AND LOWER(name) LIKE LOWER(?)"
-		args = append(args, "%"+search+"%")
-	}
-
-	query += " ORDER BY priority ASC,name ASC"
-
-	rows, err := r.db.Query(query, args...)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var result []models.Dictionary
-
-	for rows.Next() {
-
-		var d models.Dictionary
-		var fav int
-
-		if err := rows.Scan(
-			&d.Path,
-			&d.Name,
-			&d.Size,
-			&fav,
-			&d.Priority,
-		); err != nil {
-			return nil, err
-		}
-
-		d.Favorite = fav == 1
-		result = append(result, d)
-	}
-
-	return result, rows.Err()
+	return r.list(true, search)
 }
 
 func (r *DictionaryRepository) Others(search string) ([]models.Dictionary, error) {
+	return r.list(false, search)
+}
+
+func (r *DictionaryRepository) list(favorite bool, search string) ([]models.Dictionary, error) {
+	if r == nil || r.db == nil {
+		return nil, errors.New("nil repository")
+	}
 
 	query := `
 SELECT path,name,size,favorite,priority
 FROM dictionaries
-WHERE favorite=0
+WHERE favorite=?
 `
 
-	args := []any{}
+	args := []any{0}
+	if favorite {
+		args[0] = 1
+	}
 
 	if search != "" {
 		query += " AND LOWER(name) LIKE LOWER(?)"
 		args = append(args, "%"+search+"%")
 	}
 
-	query += " ORDER BY size ASC,name ASC"
+	if favorite {
+		query += " ORDER BY priority ASC,name ASC"
+	} else {
+		query += " ORDER BY size ASC,name ASC"
+	}
 
 	rows, err := r.db.Query(query, args...)
 	if err != nil {
@@ -109,7 +80,6 @@ WHERE favorite=0
 	var result []models.Dictionary
 
 	for rows.Next() {
-
 		var d models.Dictionary
 		var fav int
 
@@ -189,7 +159,7 @@ func (r *DictionaryRepository) Get(path string) (*models.Dictionary, error) {
 	}
 
 	var d models.Dictionary
-	var favorite int
+	var favoriteValue int
 
 	err := r.db.QueryRow(`
 SELECT
@@ -206,7 +176,7 @@ WHERE path=?
 		&d.Path,
 		&d.Name,
 		&d.Size,
-		&favorite,
+		&favoriteValue,
 		&d.Priority,
 	)
 
@@ -214,7 +184,7 @@ WHERE path=?
 		return nil, err
 	}
 
-	d.Favorite = favorite == 1
+	d.Favorite = favoriteValue == 1
 
 	return &d, nil
 }
