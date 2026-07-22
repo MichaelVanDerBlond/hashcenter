@@ -10,6 +10,10 @@ import (
 const DBPath = "data/hashcenter.db"
 
 const schema = `
+PRAGMA foreign_keys = ON;
+PRAGMA journal_mode = WAL;
+PRAGMA synchronous = NORMAL;
+
 CREATE TABLE IF NOT EXISTS dictionaries(
 	path TEXT PRIMARY KEY,
 	name TEXT NOT NULL,
