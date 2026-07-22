@@ -11,7 +11,6 @@ import (
 )
 
 func (m *Manager) Run(ctx context.Context, job Job) (*Result, error) {
-
 	db, err := database.Open()
 	if err != nil {
 		return nil, err
@@ -36,8 +35,7 @@ func (m *Manager) Run(ctx context.Context, job Job) (*Result, error) {
 
 	runner := hashcat.New()
 
-	version, err := runner.Version(ctx)
-	if err != nil {
+	if _, err := runner.Version(ctx); err != nil {
 		s.Fail(err)
 		_ = repo.Update(s)
 		return nil, err
@@ -108,8 +106,6 @@ func (m *Manager) Run(ctx context.Context, job Job) (*Result, error) {
 	}
 
 	_ = repo.Update(s)
-
-	_ = version
 
 	return &Result{
 		SessionID: s.ID,
