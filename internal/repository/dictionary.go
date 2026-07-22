@@ -101,27 +101,32 @@ WHERE favorite=?
 }
 
 func (r *DictionaryRepository) FavoriteCount() (int, error) {
-
-	var count int
-
-	err := r.db.QueryRow(`
-SELECT COUNT(*)
-FROM dictionaries
-WHERE favorite=1
-`).Scan(&count)
-
-	return count, err
+	return r.count(true)
 }
 
 func (r *DictionaryRepository) OtherCount() (int, error) {
+	return r.count(false)
+}
+
+func (r *DictionaryRepository) count(favorite bool) (int, error) {
+	if r == nil || r.db == nil {
+		return 0, errors.New("nil repository")
+	}
+
+	value := 0
+	if favorite {
+		value = 1
+	}
 
 	var count int
 
 	err := r.db.QueryRow(`
 SELECT COUNT(*)
 FROM dictionaries
-WHERE favorite=0
-`).Scan(&count)
+WHERE favorite=?
+`,
+		value,
+	).Scan(&count)
 
 	return count, err
 }
