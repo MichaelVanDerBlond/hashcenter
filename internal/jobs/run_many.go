@@ -1,27 +1,38 @@
 package jobs
 
-import "context"
+import (
+	"context"
+	"errors"
+)
 
 type MultiResult struct {
 	Results []*Result
 	Succeed int
 	Failed  int
+
+	Errors []error
 }
 
 func (m *Manager) RunMany(ctx context.Context, jobs []Job) (*MultiResult, error) {
 	out := &MultiResult{
 		Results: make([]*Result, 0, len(jobs)),
+		Errors:  make([]error, 0),
 	}
 
 	for _, job := range jobs {
 		result, err := m.Run(ctx, job)
 		if err != nil {
 			out.Failed++
+			out.Errors = append(out.Errors, err)
 			continue
 		}
 
 		out.Succeed++
 		out.Results = append(out.Results, result)
+	}
+
+	if len(out.Errors) > 0 {
+		return out, errors.Join(out.Errors...)
 	}
 
 	return out, nil
