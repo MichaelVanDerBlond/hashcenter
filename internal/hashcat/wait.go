@@ -16,5 +16,5 @@ func (r *Runner) Wait(result *Result) (*Result, error) {
 		<-done
 	}
 
-	return result, nil
+	return result, result.Error
 }
