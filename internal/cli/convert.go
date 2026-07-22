@@ -12,10 +12,7 @@ import (
 func Convert() error {
 
 	if len(os.Args) != 3 {
-
-		fmt.Println("Usage:")
-		fmt.Println("  hashcenter convert <capture>")
-
+		usageConvert()
 		return nil
 	}
 
@@ -65,7 +62,6 @@ func Convert() error {
 	fmt.Println("-----------------------------------------------------------")
 
 	for i, h := range list {
-
 		fmt.Printf(
 			"%-3d %-32s %-3d %-5d\n",
 			i+1,

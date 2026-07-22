@@ -38,9 +38,6 @@ func Execute() error {
 	case "status":
 		return Status()
 
-	case "serve":
-		return Serve()
-
 	case "doctor":
 		return Doctor()
 
@@ -50,10 +47,23 @@ func Execute() error {
 	case "version":
 		return Version()
 
+	case "serve":
+		return Serve()
+
 	default:
 		usage()
 		return nil
 	}
+}
+
+func usageAnalyze() {
+	fmt.Println("Usage:")
+	fmt.Println("  hashcenter analyze <capture>")
+}
+
+func usageConvert() {
+	fmt.Println("Usage:")
+	fmt.Println("  hashcenter convert <capture>")
 }
 
 func usage() {

@@ -18,8 +18,7 @@ func Analyze() error {
 		if _, err := os.Stat("reference/test.cap"); err == nil {
 			target = "reference/test.cap"
 		} else {
-			fmt.Println("Usage:")
-			fmt.Println("  hashcenter analyze <capture>")
+			usageAnalyze()
 			return nil
 		}
 
@@ -27,8 +26,7 @@ func Analyze() error {
 		target = os.Args[2]
 
 	default:
-		fmt.Println("Usage:")
-		fmt.Println("  hashcenter analyze <capture>")
+		usageAnalyze()
 		return nil
 	}
 
