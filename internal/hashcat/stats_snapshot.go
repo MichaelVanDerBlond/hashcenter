@@ -1,18 +1,16 @@
 package hashcat
 
 func (s *Status) Stats() Stats {
-
-	s.mu.RLock()
-	defer s.mu.RUnlock()
+	snapshot := s.Snapshot()
 
 	return Stats{
-		State:            s.State,
-		Speed:            s.Speed,
-		SpeedHPS:         SpeedHPS(s.Speed),
-		Progress:         s.Progress,
-		Recovered:        s.Recovered,
-		ETA:              s.ETA,
-		ProgressPercent:  percent(s.Progress),
-		RecoveredPercent: percent(s.Recovered),
+		State:            snapshot.State,
+		Speed:            snapshot.Speed,
+		SpeedHPS:         SpeedHPS(snapshot.Speed),
+		Progress:         snapshot.Progress,
+		Recovered:        snapshot.Recovered,
+		ETA:              snapshot.ETA,
+		ProgressPercent:  percent(snapshot.Progress),
+		RecoveredPercent: percent(snapshot.Recovered),
 	}
 }
