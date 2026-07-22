@@ -20,6 +20,11 @@ func Open() (*sql.DB, error) {
 		return nil, err
 	}
 
+	if err := db.Ping(); err != nil {
+		db.Close()
+		return nil, err
+	}
+
 	schema := `
 CREATE TABLE IF NOT EXISTS dictionaries(
 	path TEXT PRIMARY KEY,
