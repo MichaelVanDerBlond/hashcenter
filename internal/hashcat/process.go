@@ -3,7 +3,6 @@ package hashcat
 import "os"
 
 func (r *Runner) PID() int {
-
 	process := r.Process()
 	if process == nil {
 		return 0
@@ -13,11 +12,10 @@ func (r *Runner) PID() int {
 }
 
 func (r *Runner) Running() bool {
-	return r.PID() != 0
+	return r.Process() != nil
 }
 
 func (r *Runner) Process() *os.Process {
-
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
