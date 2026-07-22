@@ -174,3 +174,39 @@ WHERE path=?
 
 	return err
 }
+
+func (r *DictionaryRepository) Get(path string) (*models.Dictionary, error) {
+	if r == nil || r.db == nil {
+		return nil, errors.New("nil repository")
+	}
+
+	var d models.Dictionary
+	var favorite int
+
+	err := r.db.QueryRow(`
+SELECT
+	path,
+	name,
+	size,
+	favorite,
+	priority
+FROM dictionaries
+WHERE path=?
+`,
+		path,
+	).Scan(
+		&d.Path,
+		&d.Name,
+		&d.Size,
+		&favorite,
+		&d.Priority,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	d.Favorite = favorite == 1
+
+	return &d, nil
+}
