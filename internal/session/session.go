@@ -31,3 +31,19 @@ func (s *Session) IsFinished() bool {
 func (s *Session) IsFailed() bool {
 	return s != nil && s.State == Failed
 }
+
+func (s *Session) Duration() time.Duration {
+	if s == nil {
+		return 0
+	}
+
+	if s.Started.IsZero() {
+		return 0
+	}
+
+	if s.Finished.IsZero() {
+		return time.Since(s.Started)
+	}
+
+	return s.Finished.Sub(s.Started)
+}
