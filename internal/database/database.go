@@ -9,23 +9,7 @@ import (
 
 const DBPath = "data/hashcenter.db"
 
-func Open() (*sql.DB, error) {
-
-	if err := os.MkdirAll("data", 0755); err != nil {
-		return nil, err
-	}
-
-	db, err := sql.Open("sqlite", DBPath)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := db.Ping(); err != nil {
-		db.Close()
-		return nil, err
-	}
-
-	schema := `
+const schema = `
 CREATE TABLE IF NOT EXISTS dictionaries(
 	path TEXT PRIMARY KEY,
 	name TEXT NOT NULL,
@@ -51,6 +35,22 @@ CREATE TABLE IF NOT EXISTS sessions(
 	error TEXT
 );
 `
+
+func Open() (*sql.DB, error) {
+
+	if err := os.MkdirAll("data", 0755); err != nil {
+		return nil, err
+	}
+
+	db, err := sql.Open("sqlite", DBPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := db.Ping(); err != nil {
+		db.Close()
+		return nil, err
+	}
 
 	if _, err := db.Exec(schema); err != nil {
 		db.Close()
