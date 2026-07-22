@@ -6,6 +6,8 @@ import (
 	"sync"
 )
 
+const DefaultBinary = "hashcat"
+
 type Runner struct {
 	Binary string
 
@@ -18,7 +20,7 @@ type Runner struct {
 
 func New() *Runner {
 	return &Runner{
-		Binary: "hashcat",
+		Binary: DefaultBinary,
 		done:   make(chan struct{}),
 	}
 }
