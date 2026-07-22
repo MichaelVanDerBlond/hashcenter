@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -28,6 +29,14 @@ func UploadHash(c *gin.Context) {
 	for _, file := range files {
 
 		dst := filepath.Join(UploadDir, filepath.Base(file.Filename))
+
+		if _, err := os.Stat(dst); err == nil {
+			c.String(http.StatusConflict, "file already exists: %s", file.Filename)
+			return
+		} else if !errors.Is(err, os.ErrNotExist) {
+			c.String(http.StatusInternalServerError, err.Error())
+			return
+		}
 
 		if err := c.SaveUploadedFile(file, dst); err != nil {
 			c.String(http.StatusInternalServerError, err.Error())
