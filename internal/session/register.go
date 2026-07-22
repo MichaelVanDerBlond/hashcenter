@@ -1,12 +1,7 @@
 package session
 
 func (m *Manager) Register(r *Runtime) {
-
-	if r == nil {
-		return
-	}
-
-	if r.Session == nil {
+	if m == nil || r == nil || r.Session == nil {
 		return
 	}
 
