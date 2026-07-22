@@ -157,18 +157,26 @@ WHERE favorite=0
 }
 
 func (r *DictionaryRepository) SetFavorite(path string, favorite bool) error {
+	if r == nil || r.db == nil {
+		return errors.New("nil repository")
+	}
 
 	value := 0
+	priority := 0
+
 	if favorite {
 		value = 1
 	}
 
 	_, err := r.db.Exec(`
 UPDATE dictionaries
-SET favorite=?
+SET
+	favorite=?,
+	priority=?
 WHERE path=?
 `,
 		value,
+		priority,
 		path,
 	)
 
