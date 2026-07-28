@@ -9,15 +9,18 @@ const file = "output/session.json"
 
 func Load() (*Session, error) {
 
-	s := &Session{}
-
 	data, err := os.ReadFile(file)
 	if err != nil {
-		return s, err
+		return nil, err
 	}
 
-	err = json.Unmarshal(data, s)
-	return s, err
+	s := &Session{}
+
+	if err := json.Unmarshal(data, s); err != nil {
+		return nil, err
+	}
+
+	return s, nil
 }
 
 func Save(s *Session) error {
