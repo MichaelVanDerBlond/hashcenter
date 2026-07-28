@@ -55,7 +55,7 @@ func AnalyzeFile(path string) (*Analysis, error) {
 
 			a.CapinfosAvailable = true
 
-			out, err := exec.Command("capinfos", path).Output()
+			out, err := exec.Command("capinfos", path).CombinedOutput()
 			if err == nil {
 
 				value := func(line, prefix string) string {
