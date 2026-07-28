@@ -10,6 +10,10 @@ import (
 )
 
 func (m *Manager) Run(ctx context.Context, job Job) (*Result, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
 	db, err := database.Open()
 	if err != nil {
 		return nil, err
@@ -57,9 +61,7 @@ func (m *Manager) Run(ctx context.Context, job Job) (*Result, error) {
 	}
 
 	m.Register(runtime)
-	defer func() {
-		m.Remove(runtime.SessionID)
-	}()
+	defer m.Remove(runtime.SessionID)
 
 	result, err = runner.Wait(result)
 
