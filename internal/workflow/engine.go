@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 )
 
 type Engine struct {
@@ -26,7 +27,21 @@ func (e *Engine) Run(ctx context.Context, wf *Context) error {
 		return errors.New("workflow context is nil")
 	}
 
+	wf.StartedAt = time.Now()
+	wf.FinishedAt = time.Time{}
+	wf.CurrentStage = ""
+	wf.CompletedStages = nil
+
+	defer func() {
+		wf.FinishedAt = time.Now()
+		wf.CurrentStage = ""
+	}()
+
 	for _, stage := range e.stages {
+		if err := ctx.Err(); err != nil {
+			return err
+		}
+
 		if !stage.ShouldRun(wf) {
 			continue
 		}
@@ -37,10 +52,7 @@ func (e *Engine) Run(ctx context.Context, wf *Context) error {
 			return fmt.Errorf("%s: %w", stage.Name(), err)
 		}
 
-		wf.CompletedStages = append(
-			wf.CompletedStages,
-			stage.Name(),
-		)
+		wf.CompletedStages = append(wf.CompletedStages, stage.Name())
 	}
 
 	return nil
