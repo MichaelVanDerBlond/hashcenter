@@ -6,7 +6,7 @@ import (
 )
 
 func (r *Runner) Version(ctx context.Context) (string, error) {
-	out, err := r.Command(ctx, "--version").Output()
+	out, err := r.Command(ctx, "--version").CombinedOutput()
 	if err != nil {
 		return "", err
 	}
