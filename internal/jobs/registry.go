@@ -1,5 +1,7 @@
 package jobs
 
+import "sort"
+
 func (m *Manager) Register(runtime *Runtime) {
 	if runtime == nil {
 		return
@@ -40,6 +42,10 @@ func (m *Manager) List() []*Runtime {
 	for _, runtime := range m.jobs {
 		result = append(result, runtime)
 	}
+
+	sort.Slice(result, func(i, j int) bool {
+		return result[i].SessionID < result[j].SessionID
+	})
 
 	return result
 }
