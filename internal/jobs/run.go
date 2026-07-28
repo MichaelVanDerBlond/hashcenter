@@ -57,7 +57,9 @@ func (m *Manager) Run(ctx context.Context, job Job) (*Result, error) {
 	}
 
 	m.Register(runtime)
-	defer m.Remove(s.ID)
+	defer func() {
+		m.Remove(runtime.SessionID)
+	}()
 
 	result, err = runner.Wait(result)
 
