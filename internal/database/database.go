@@ -39,12 +39,29 @@ CREATE TABLE IF NOT EXISTS sessions(
 
 	capture_file TEXT,
 
+	dictionary TEXT,
+	attack_mode INTEGER,
+	hash_mode INTEGER,
+	rule TEXT,
+	mask TEXT,
+	device TEXT,
+	workload INTEGER,
+	session_name TEXT,
+
 	error TEXT
 );
 `
 
 var migrations = []string{
 	`ALTER TABLE sessions ADD COLUMN created TEXT;`,
+	`ALTER TABLE sessions ADD COLUMN dictionary TEXT;`,
+	`ALTER TABLE sessions ADD COLUMN attack_mode INTEGER;`,
+	`ALTER TABLE sessions ADD COLUMN hash_mode INTEGER;`,
+	`ALTER TABLE sessions ADD COLUMN rule TEXT;`,
+	`ALTER TABLE sessions ADD COLUMN mask TEXT;`,
+	`ALTER TABLE sessions ADD COLUMN device TEXT;`,
+	`ALTER TABLE sessions ADD COLUMN workload INTEGER;`,
+	`ALTER TABLE sessions ADD COLUMN session_name TEXT;`,
 }
 
 func Open() (*sql.DB, error) {
