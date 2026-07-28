@@ -18,9 +18,8 @@ func DecodeESSID(s string) string {
 		return s
 	}
 
-	essid := string(b)
-
-	if strings.TrimSpace(essid) == "" {
+	essid := strings.TrimSpace(string(b))
+	if essid == "" {
 		return "<hidden>"
 	}
 
