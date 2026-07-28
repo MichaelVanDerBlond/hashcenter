@@ -33,17 +33,14 @@ func (s *Session) IsFailed() bool {
 }
 
 func (s *Session) Duration() time.Duration {
-	if s == nil {
+	if s == nil || s.Started.IsZero() {
 		return 0
 	}
 
-	if s.Started.IsZero() {
-		return 0
+	end := s.Finished
+	if end.IsZero() {
+		end = time.Now()
 	}
 
-	if s.Finished.IsZero() {
-		return time.Since(s.Started)
-	}
-
-	return s.Finished.Sub(s.Started)
+	return end.Sub(s.Started)
 }
