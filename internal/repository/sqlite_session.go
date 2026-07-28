@@ -58,6 +58,7 @@ func (r *SQLiteSessionRepository) Save(s *session.Session) error {
 INSERT INTO sessions(
 	id,
 	state,
+	created,
 	started,
 	finished,
 	interface,
@@ -66,10 +67,11 @@ INSERT INTO sessions(
 	capture_file,
 	error
 )
-VALUES(?,?,?,?,?,?,?,?,?)
+VALUES(?,?,?,?,?,?,?,?,?,?)
 `,
 		s.ID,
 		string(s.State),
+		formatTime(s.Created),
 		formatTime(s.Started),
 		formatTime(s.Finished),
 		s.Interface,
@@ -99,6 +101,7 @@ func (r *SQLiteSessionRepository) Update(s *session.Session) error {
 UPDATE sessions
 SET
 	state=?,
+	created=?,
 	started=?,
 	finished=?,
 	interface=?,
@@ -109,6 +112,7 @@ SET
 WHERE id=?
 `,
 		string(s.State),
+		formatTime(s.Created),
 		formatTime(s.Started),
 		formatTime(s.Finished),
 		s.Interface,
@@ -133,6 +137,7 @@ func (r *SQLiteSessionRepository) Get(id string) (*session.Session, error) {
 
 	var s session.Session
 
+	var created string
 	var started string
 	var finished string
 
@@ -140,6 +145,7 @@ func (r *SQLiteSessionRepository) Get(id string) (*session.Session, error) {
 SELECT
 	id,
 	state,
+	created,
 	started,
 	finished,
 	interface,
@@ -154,6 +160,7 @@ WHERE id=?
 	).Scan(
 		&s.ID,
 		&s.State,
+		&created,
 		&started,
 		&finished,
 		&s.Interface,
@@ -167,6 +174,7 @@ WHERE id=?
 		return nil, err
 	}
 
+	s.Created = parseTime(created)
 	s.Started = parseTime(started)
 	s.Finished = parseTime(finished)
 
@@ -182,6 +190,7 @@ func (r *SQLiteSessionRepository) List() ([]session.Session, error) {
 SELECT
 	id,
 	state,
+	created,
 	started,
 	finished,
 	interface,
@@ -190,7 +199,7 @@ SELECT
 	capture_file,
 	error
 FROM sessions
-ORDER BY started DESC
+ORDER BY created DESC
 `)
 	if err != nil {
 		return nil, err
@@ -202,12 +211,14 @@ ORDER BY started DESC
 	for rows.Next() {
 		var s session.Session
 
+		var created string
 		var started string
 		var finished string
 
 		if err := rows.Scan(
 			&s.ID,
 			&s.State,
+			&created,
 			&started,
 			&finished,
 			&s.Interface,
@@ -219,6 +230,7 @@ ORDER BY started DESC
 			return nil, err
 		}
 
+		s.Created = parseTime(created)
 		s.Started = parseTime(started)
 		s.Finished = parseTime(finished)
 

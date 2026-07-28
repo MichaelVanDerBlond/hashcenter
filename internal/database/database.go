@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"os"
 	"path/filepath"
-	"time"
 
 	_ "modernc.org/sqlite"
 )
@@ -28,6 +27,7 @@ CREATE TABLE IF NOT EXISTS sessions(
 	id TEXT PRIMARY KEY,
 	state TEXT NOT NULL,
 
+	created TEXT,
 	started TEXT,
 	finished TEXT,
 
@@ -40,6 +40,8 @@ CREATE TABLE IF NOT EXISTS sessions(
 
 	error TEXT
 );
+
+ALTER TABLE sessions ADD COLUMN created TEXT;
 `
 
 func Open() (*sql.DB, error) {
@@ -70,8 +72,11 @@ func Open() (*sql.DB, error) {
 	}
 
 	if _, err := db.Exec(schema); err != nil {
-		_ = db.Close()
-		return nil, err
+		// duplicate column name при повторном ALTER игнорируем
+		if err.Error() != "SQL logic error: duplicate column name: created (1)" {
+			_ = db.Close()
+			return nil, err
+		}
 	}
 
 	return db, nil
