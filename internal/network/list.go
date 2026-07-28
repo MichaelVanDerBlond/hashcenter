@@ -5,6 +5,9 @@ type List struct {
 }
 
 func (l *List) Add(n Network) {
-	n.ID = len(l.Networks) + 1
+	if n.ID == 0 {
+		n.ID = len(l.Networks) + 1
+	}
+
 	l.Networks = append(l.Networks, n)
 }
