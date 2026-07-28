@@ -5,6 +5,10 @@ func (m *Manager) Register(r *Runtime) {
 		return
 	}
 
+	if r.Session.ID == "" {
+		return
+	}
+
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
