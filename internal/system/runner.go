@@ -3,6 +3,7 @@ package system
 import (
 	"bytes"
 	"os/exec"
+	"strings"
 )
 
 type CommandResult struct {
@@ -27,8 +28,9 @@ func RunCommand(command []string) (*CommandResult, error) {
 	err := cmd.Run()
 
 	result := &CommandResult{
-		Command: command,
-		Output:  out.String(),
+		Command:  command,
+		Output:   strings.TrimSpace(out.String()),
+		ExitCode: 0,
 	}
 
 	if err == nil {
