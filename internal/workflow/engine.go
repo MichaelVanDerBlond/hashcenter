@@ -2,6 +2,7 @@ package workflow
 
 import (
 	"context"
+	"errors"
 	"fmt"
 )
 
@@ -21,9 +22,11 @@ func (e *Engine) Add(stage Stage) *Engine {
 }
 
 func (e *Engine) Run(ctx context.Context, wf *Context) error {
+	if wf == nil {
+		return errors.New("workflow context is nil")
+	}
 
 	for _, stage := range e.stages {
-
 		if !stage.ShouldRun(wf) {
 			continue
 		}
