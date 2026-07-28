@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"os"
+	"path/filepath"
 
 	_ "modernc.org/sqlite"
 )
@@ -41,13 +42,15 @@ CREATE TABLE IF NOT EXISTS sessions(
 `
 
 func Open() (*sql.DB, error) {
-	if err := os.MkdirAll("data", 0755); err != nil {
-		return nil, err
-	}
-
 	dbPath := os.Getenv("HASHCENTER_DB")
 	if dbPath == "" {
 		dbPath = DefaultDBPath
+	}
+
+	if dir := filepath.Dir(dbPath); dir != "." {
+		if err := os.MkdirAll(dir, 0755); err != nil {
+			return nil, err
+		}
 	}
 
 	db, err := sql.Open("sqlite", dbPath)
