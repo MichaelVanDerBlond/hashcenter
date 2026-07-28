@@ -29,7 +29,7 @@ func BuildConversionPlan(input string, t CaptureFileType) ConversionPlan {
 
 	case TypePCAP, TypePCAPNG:
 
-		p := ConversionPlan{
+		plan := ConversionPlan{
 			InputType:        t,
 			OutputType:       "HC22000",
 			Backend:          "hcxpcapngtool",
@@ -38,16 +38,16 @@ func BuildConversionPlan(input string, t CaptureFileType) ConversionPlan {
 			OutputFile:       out,
 		}
 
-		if _, err := exec.LookPath("hcxpcapngtool"); err == nil {
-			p.BackendAvailable = true
-			p.Command = []string{
-				"hcxpcapngtool",
+		if _, err := exec.LookPath(plan.Backend); err == nil {
+			plan.BackendAvailable = true
+			plan.Command = []string{
+				plan.Backend,
 				"-o", out,
 				input,
 			}
 		}
 
-		return p
+		return plan
 
 	case TypeHC22000:
 
