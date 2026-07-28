@@ -18,6 +18,20 @@ type Session struct {
 
 	CaptureFile string
 
+	Dictionary string
+
+	AttackMode int
+	HashMode   int
+
+	Rule string
+	Mask string
+
+	Device string
+
+	Workload int
+
+	SessionName string
+
 	Error string
 }
 

@@ -25,6 +25,14 @@ func (m *Manager) Run(ctx context.Context, job Job) (*Result, error) {
 	s := session.New()
 	s.Backend = "hashcat"
 	s.CaptureFile = job.HashFile
+	s.Dictionary = job.Dictionary
+	s.AttackMode = job.AttackMode
+	s.HashMode = job.HashMode
+	s.Rule = job.Rule
+	s.Mask = job.Mask
+	s.Device = job.Device
+	s.Workload = job.Workload
+	s.SessionName = job.SessionName
 
 	if err := repo.Save(s); err != nil {
 		return nil, err
