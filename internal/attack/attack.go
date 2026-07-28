@@ -8,6 +8,9 @@ import (
 )
 
 func Execute(ctx context.Context, job Job) error {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	wf := workflow.NewContext()
 
