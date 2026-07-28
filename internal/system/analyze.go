@@ -58,18 +58,22 @@ func AnalyzeFile(path string) (*Analysis, error) {
 			out, err := exec.Command("capinfos", path).Output()
 			if err == nil {
 
+				value := func(line, prefix string) string {
+					return strings.TrimSpace(strings.TrimPrefix(line, prefix))
+				}
+
 				for _, line := range strings.Split(string(out), "\n") {
 
 					switch {
 
 					case strings.HasPrefix(line, "Number of packets:"):
-						a.PacketCount = strings.TrimSpace(strings.TrimPrefix(line, "Number of packets:"))
+						a.PacketCount = value(line, "Number of packets:")
 
 					case strings.HasPrefix(line, "Capture duration:"):
-						a.CaptureDuration = strings.TrimSpace(strings.TrimPrefix(line, "Capture duration:"))
+						a.CaptureDuration = value(line, "Capture duration:")
 
 					case strings.HasPrefix(line, "File encapsulation:"):
-						a.FileEncapsulation = strings.TrimSpace(strings.TrimPrefix(line, "File encapsulation:"))
+						a.FileEncapsulation = value(line, "File encapsulation:")
 					}
 				}
 			}
