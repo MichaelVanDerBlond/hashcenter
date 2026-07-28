@@ -13,9 +13,13 @@ func collectCapinfos(r *Report) error {
 
 	r.Capinfos = true
 
-	out, err := exec.Command("capinfos", r.Path).Output()
+	out, err := exec.Command("capinfos", r.Path).CombinedOutput()
 	if err != nil {
 		return nil
+	}
+
+	value := func(line, prefix string) string {
+		return strings.TrimSpace(strings.TrimPrefix(line, prefix))
 	}
 
 	for _, line := range strings.Split(string(out), "\n") {
@@ -25,13 +29,13 @@ func collectCapinfos(r *Report) error {
 		switch {
 
 		case strings.HasPrefix(line, "Number of packets:"):
-			r.Packets = strings.TrimSpace(strings.TrimPrefix(line, "Number of packets:"))
+			r.Packets = value(line, "Number of packets:")
 
 		case strings.HasPrefix(line, "Capture duration:"):
-			r.Duration = strings.TrimSpace(strings.TrimPrefix(line, "Capture duration:"))
+			r.Duration = value(line, "Capture duration:")
 
 		case strings.HasPrefix(line, "File encapsulation:"):
-			r.Encapsulation = strings.TrimSpace(strings.TrimPrefix(line, "File encapsulation:"))
+			r.Encapsulation = value(line, "File encapsulation:")
 		}
 	}
 
