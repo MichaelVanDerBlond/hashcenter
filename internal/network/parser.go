@@ -13,16 +13,15 @@ func Discover(path string) (*List, error) {
 
 	list := &List{}
 
-	cmd := exec.Command(
+	out, err := exec.Command(
 		"tshark",
 		"-r", path,
 		"-Y", "wlan.fc.type_subtype==8",
 		"-T", "fields",
 		"-e", "wlan.bssid",
 		"-e", "wlan.ssid",
-	)
+	).CombinedOutput()
 
-	out, err := cmd.Output()
 	if err != nil {
 		return list, err
 	}
@@ -72,6 +71,10 @@ func Discover(path string) (*List, error) {
 		}
 
 		list.Add(n)
+	}
+
+	if err := scanner.Err(); err != nil {
+		return list, err
 	}
 
 	return list, nil
