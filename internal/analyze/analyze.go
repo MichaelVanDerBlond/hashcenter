@@ -36,9 +36,15 @@ func Analyze(path string) (*Report, error) {
 		r.Backend = "hcxhashtool"
 	}
 
-	_ = collectCapinfos(r)
-	_ = collectTShark(r)
-	_ = collectHCX(r)
+	analyzers := []func(*Report) error{
+		collectCapinfos,
+		collectTShark,
+		collectHCX,
+	}
+
+	for _, analyzer := range analyzers {
+		_ = analyzer(r)
+	}
 
 	if nets, err := network.Discover(path); err == nil {
 		r.Networks = *nets
