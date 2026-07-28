@@ -15,8 +15,8 @@ type WiFiInterface struct {
 
 func collectWiFi(info *Info) error {
 
-	_, airmonErr := exec.Command("airmon-ng").Output()
-	airmonAvailable := airmonErr == nil
+	_, err := exec.LookPath("airmon-ng")
+	airmonAvailable := err == nil
 
 	out, err := exec.Command("iw", "dev").Output()
 	if err != nil {
