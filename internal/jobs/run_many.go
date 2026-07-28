@@ -20,6 +20,12 @@ func (m *Manager) RunMany(ctx context.Context, jobs []Job) (*MultiResult, error)
 	}
 
 	for _, job := range jobs {
+
+		if err := ctx.Err(); err != nil {
+			out.Errors = append(out.Errors, err)
+			break
+		}
+
 		result, err := m.Run(ctx, job)
 		if err != nil {
 			out.Failed++
