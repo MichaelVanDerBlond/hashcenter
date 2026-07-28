@@ -23,8 +23,10 @@ func (r *Runner) Run(ctx context.Context, args ...string) (*Result, error) {
 	err := cmd.Run()
 
 	result.Finished = time.Now()
+	result.Duration = result.Finished.Sub(result.Started)
 	result.Stdout = stdout.String()
 	result.Stderr = stderr.String()
+	result.Error = err
 
 	if cmd.ProcessState != nil {
 		result.ExitCode = cmd.ProcessState.ExitCode()
