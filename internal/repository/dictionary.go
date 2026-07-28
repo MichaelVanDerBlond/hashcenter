@@ -127,6 +127,10 @@ func (r *DictionaryRepository) SetFavorite(path string, favorite bool) error {
 		return errors.New("nil repository")
 	}
 
+	if path == "" {
+		return nil
+	}
+
 	value := 0
 	priority := 0
 
