@@ -30,12 +30,13 @@ func Exec(ctx context.Context, name string, args ...string) (Result, error) {
 		Stderr: strings.TrimSpace(stderr.String()),
 	}
 
-	if err != nil {
-		if res.Stderr != "" {
-			return res, fmt.Errorf("%s: %s", name, res.Stderr)
-		}
-		return res, err
+	if err == nil {
+		return res, nil
 	}
 
-	return res, nil
+	if res.Stderr != "" {
+		return res, fmt.Errorf("%s: %s: %w", name, res.Stderr, err)
+	}
+
+	return res, fmt.Errorf("%s: %w", name, err)
 }
