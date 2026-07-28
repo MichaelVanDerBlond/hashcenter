@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS sessions(
 	device TEXT,
 	workload INTEGER,
 	session_name TEXT,
+	exit_code INTEGER,
 
 	error TEXT
 );
@@ -62,6 +63,7 @@ var migrations = []string{
 	`ALTER TABLE sessions ADD COLUMN device TEXT;`,
 	`ALTER TABLE sessions ADD COLUMN workload INTEGER;`,
 	`ALTER TABLE sessions ADD COLUMN session_name TEXT;`,
+	`ALTER TABLE sessions ADD COLUMN exit_code INTEGER;`,
 }
 
 func Open() (*sql.DB, error) {

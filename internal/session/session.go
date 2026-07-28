@@ -32,6 +32,8 @@ type Session struct {
 
 	SessionName string
 
+	ExitCode int
+
 	Error string
 }
 
