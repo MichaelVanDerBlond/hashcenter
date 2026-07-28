@@ -23,7 +23,6 @@ var (
 )
 
 func addQueueJob(hash, dict string) *QueueJob {
-
 	queueMu.Lock()
 	defer queueMu.Unlock()
 
@@ -42,12 +41,15 @@ func addQueueJob(hash, dict string) *QueueJob {
 }
 
 func listQueueJobs() []*QueueJob {
-
 	queueMu.RLock()
 	defer queueMu.RUnlock()
 
-	result := make([]*QueueJob, len(queueJobs))
-	copy(result, queueJobs)
+	result := make([]*QueueJob, 0, len(queueJobs))
+
+	for _, job := range queueJobs {
+		copyJob := *job
+		result = append(result, &copyJob)
+	}
 
 	return result
 }
