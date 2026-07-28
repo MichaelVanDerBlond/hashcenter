@@ -7,14 +7,22 @@ import (
 
 func tsharkCount(path, filter string) uint64 {
 
-	out, err := run(
-		"tshark",
+	args := []string{
 		"-r", path,
-		"-Y", filter,
+	}
+
+	if filter != "" {
+		args = append(args,
+			"-Y", filter,
+		)
+	}
+
+	args = append(args,
 		"-T", "fields",
 		"-e", "frame.number",
 	)
 
+	out, err := run("tshark", args...)
 	if err != nil {
 		return 0
 	}
@@ -49,28 +57,8 @@ func collectTShark(r *Report) error {
 		}
 	}
 
-	out, err := run(
-		"tshark",
-		"-r",
-		r.Path,
-		"-T",
-		"fields",
-		"-e",
-		"frame.number",
-	)
+	r.Frames = strconv.FormatUint(tsharkCount(r.Path, ""), 10)
 
-	if err == nil {
-
-		text := strings.TrimSpace(string(out))
-
-		if text == "" {
-			r.Frames = "0"
-		} else {
-			r.Frames = strconv.Itoa(len(strings.Split(text, "\n")))
-		}
-	}
-
-	// Wi-Fi Counters
 	r.BeaconFrames = tsharkCount(r.Path, "wlan.fc.type_subtype == 8")
 	r.ProbeFrames = tsharkCount(r.Path, "wlan.fc.type_subtype == 4")
 
