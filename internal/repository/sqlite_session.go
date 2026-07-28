@@ -73,9 +73,10 @@ INSERT INTO sessions(
 	device,
 	workload,
 	session_name,
+	exit_code,
 	error
 )
-VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
 `,
 		s.ID,
 		string(s.State),
@@ -94,6 +95,7 @@ VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
 		s.Device,
 		s.Workload,
 		s.SessionName,
+		s.ExitCode,
 		s.Error,
 	)
 
@@ -132,6 +134,7 @@ SET
 	device=?,
 	workload=?,
 	session_name=?,
+	exit_code=?,
 	error=?
 WHERE id=?
 `,
@@ -151,6 +154,7 @@ WHERE id=?
 		s.Device,
 		s.Workload,
 		s.SessionName,
+		s.ExitCode,
 		s.Error,
 		s.ID,
 	)
@@ -192,6 +196,7 @@ SELECT
 	device,
 	workload,
 	session_name,
+	exit_code,
 	error
 FROM sessions
 WHERE id=?
@@ -215,6 +220,7 @@ WHERE id=?
 		&s.Device,
 		&s.Workload,
 		&s.SessionName,
+		&s.ExitCode,
 		&s.Error,
 	)
 
@@ -253,6 +259,7 @@ SELECT
 	device,
 	workload,
 	session_name,
+	exit_code,
 	error
 FROM sessions
 ORDER BY created DESC
@@ -289,6 +296,7 @@ ORDER BY created DESC
 			&s.Device,
 			&s.Workload,
 			&s.SessionName,
+			&s.ExitCode,
 			&s.Error,
 		); err != nil {
 			return nil, err
