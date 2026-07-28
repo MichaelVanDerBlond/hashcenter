@@ -1,10 +1,15 @@
 package session
 
-import "github.com/google/uuid"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 func New() *Session {
 	return &Session{
-		ID:    uuid.NewString(),
-		State: Created,
+		ID:      uuid.NewString(),
+		State:   Created,
+		Created: time.Now(),
 	}
 }

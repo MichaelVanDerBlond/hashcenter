@@ -7,6 +7,7 @@ type Session struct {
 
 	State State
 
+	Created  time.Time
 	Started  time.Time
 	Finished time.Time
 
