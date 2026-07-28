@@ -3,8 +3,12 @@ package workflow
 import "github.com/MichaelVanDerBlond/hashcenter/internal/analyze"
 
 func Build(r *analyze.Report) *Plan {
-
 	p := &Plan{}
+
+	if r == nil {
+		p.Add("Analysis report is unavailable.")
+		return p
+	}
 
 	if r.Conversion {
 		p.Add("Convert capture to HC22000 using hcxpcapngtool.")
