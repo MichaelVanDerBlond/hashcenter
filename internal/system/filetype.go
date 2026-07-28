@@ -3,6 +3,7 @@ package system
 import (
 	"bufio"
 	"bytes"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -33,7 +34,6 @@ func DetectCaptureFile(path string) CaptureFileType {
 
 		switch {
 
-		// PCAP
 		case bytes.HasPrefix(header, []byte{0xd4, 0xc3, 0xb2, 0xa1}),
 			bytes.HasPrefix(header, []byte{0xa1, 0xb2, 0xc3, 0xd4}),
 			bytes.HasPrefix(header, []byte{0x4d, 0x3c, 0xb2, 0xa1}),
@@ -41,35 +41,33 @@ func DetectCaptureFile(path string) CaptureFileType {
 
 			return TypePCAP
 
-		// PCAPNG
 		case bytes.HasPrefix(header, []byte{0x0A, 0x0D, 0x0D, 0x0A}):
 
 			return TypePCAPNG
 		}
 
-		f.Seek(0, 0)
+		if _, err := f.Seek(0, io.SeekStart); err == nil {
 
-		scanner := bufio.NewScanner(f)
+			scanner := bufio.NewScanner(f)
 
-		if scanner.Scan() {
+			if scanner.Scan() {
 
-			line := scanner.Text()
+				line := scanner.Text()
 
-			switch {
+				switch {
 
-			case strings.HasPrefix(line, "WPA*"):
-				return TypeHC22000
+				case strings.HasPrefix(line, "WPA*"):
+					return TypeHC22000
 
-			case strings.Contains(line, ":16800:"):
-				return Type16800
+				case strings.Contains(line, ":16800:"):
+					return Type16800
 
-			case strings.Contains(line, ":16801:"):
-				return Type16801
+				case strings.Contains(line, ":16801:"):
+					return Type16801
+				}
 			}
 		}
 	}
-
-	// Последний шанс — расширение
 
 	switch strings.ToLower(filepath.Ext(path)) {
 
