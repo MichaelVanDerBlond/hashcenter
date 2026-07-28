@@ -50,6 +50,10 @@ func (r *SQLiteSessionRepository) Save(s *session.Session) error {
 		return errors.New("nil session")
 	}
 
+	if s.ID == "" {
+		return errors.New("empty session id")
+	}
+
 	_, err := r.db.Exec(`
 INSERT INTO sessions(
 	id,
@@ -87,6 +91,10 @@ func (r *SQLiteSessionRepository) Update(s *session.Session) error {
 		return errors.New("nil session")
 	}
 
+	if s.ID == "" {
+		return errors.New("empty session id")
+	}
+
 	_, err := r.db.Exec(`
 UPDATE sessions
 SET
@@ -117,6 +125,10 @@ WHERE id=?
 func (r *SQLiteSessionRepository) Get(id string) (*session.Session, error) {
 	if r == nil || r.db == nil {
 		return nil, errors.New("nil repository")
+	}
+
+	if id == "" {
+		return nil, sql.ErrNoRows
 	}
 
 	var s session.Session
@@ -183,7 +195,6 @@ ORDER BY started DESC
 	if err != nil {
 		return nil, err
 	}
-
 	defer rows.Close()
 
 	var sessions []session.Session
@@ -194,7 +205,7 @@ ORDER BY started DESC
 		var started string
 		var finished string
 
-		err := rows.Scan(
+		if err := rows.Scan(
 			&s.ID,
 			&s.State,
 			&started,
@@ -204,8 +215,7 @@ ORDER BY started DESC
 			&s.Backend,
 			&s.CaptureFile,
 			&s.Error,
-		)
-		if err != nil {
+		); err != nil {
 			return nil, err
 		}
 
@@ -244,6 +254,10 @@ WHERE id=?
 func (r *SQLiteSessionRepository) Exists(id string) (bool, error) {
 	if r == nil || r.db == nil {
 		return false, errors.New("nil repository")
+	}
+
+	if id == "" {
+		return false, nil
 	}
 
 	var count int
