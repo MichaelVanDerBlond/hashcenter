@@ -19,6 +19,10 @@ func (m *Manager) RunMany(ctx context.Context, jobs []Job) (*MultiResult, error)
 		Errors:  make([]error, 0),
 	}
 
+	if len(jobs) == 0 {
+		return out, nil
+	}
+
 	for _, job := range jobs {
 
 		if err := ctx.Err(); err != nil {
