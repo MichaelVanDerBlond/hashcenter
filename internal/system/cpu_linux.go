@@ -18,19 +18,26 @@ func collectCPU(info *Info) error {
 
 	for _, line := range strings.Split(string(data), "\n") {
 
+		parts := strings.SplitN(line, ":", 2)
+		if len(parts) != 2 {
+			continue
+		}
+
+		key := strings.TrimSpace(parts[0])
+		value := strings.TrimSpace(parts[1])
+
 		switch {
 
-		case strings.HasPrefix(line, "vendor_id") && info.CPU.Vendor == "":
-			info.CPU.Vendor = strings.TrimSpace(strings.SplitN(line, ":", 2)[1])
+		case key == "vendor_id" && info.CPU.Vendor == "":
+			info.CPU.Vendor = value
 
-		case strings.HasPrefix(line, "model name") && info.CPU.Model == "":
-			info.CPU.Model = strings.TrimSpace(strings.SplitN(line, ":", 2)[1])
+		case key == "model name" && info.CPU.Model == "":
+			info.CPU.Model = value
 
-		case strings.HasPrefix(line, "cpu cores") && info.CPU.Cores == 0:
-			v := strings.TrimSpace(strings.SplitN(line, ":", 2)[1])
-			info.CPU.Cores, _ = strconv.Atoi(v)
+		case key == "cpu cores" && info.CPU.Cores == 0:
+			info.CPU.Cores, _ = strconv.Atoi(value)
 
-		case strings.HasPrefix(line, "processor"):
+		case key == "processor":
 			info.CPU.Threads++
 		}
 	}
