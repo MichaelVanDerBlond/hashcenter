@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"os"
 	"path/filepath"
+	"strings"
 
 	_ "modernc.org/sqlite"
 )
@@ -40,9 +41,11 @@ CREATE TABLE IF NOT EXISTS sessions(
 
 	error TEXT
 );
-
-ALTER TABLE sessions ADD COLUMN created TEXT;
 `
+
+var migrations = []string{
+	`ALTER TABLE sessions ADD COLUMN created TEXT;`,
+}
 
 func Open() (*sql.DB, error) {
 	dbPath := os.Getenv("HASHCENTER_DB")
@@ -72,8 +75,15 @@ func Open() (*sql.DB, error) {
 	}
 
 	if _, err := db.Exec(schema); err != nil {
-		// duplicate column name при повторном ALTER игнорируем
-		if err.Error() != "SQL logic error: duplicate column name: created (1)" {
+		_ = db.Close()
+		return nil, err
+	}
+
+	for _, migration := range migrations {
+		if _, err := db.Exec(migration); err != nil {
+			if strings.Contains(err.Error(), "duplicate column name") {
+				continue
+			}
 			_ = db.Close()
 			return nil, err
 		}
