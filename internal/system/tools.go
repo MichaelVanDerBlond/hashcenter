@@ -27,17 +27,20 @@ func collectTools(info *Info) {
 
 	for _, t := range tools {
 
-		out, err := exec.Command(t.Cmd, t.Args...).CombinedOutput()
-
 		item := ToolInfo{
 			Name: t.Name,
 		}
 
+		if _, err := exec.LookPath(t.Cmd); err != nil {
+			info.Tools = append(info.Tools, item)
+			continue
+		}
+
+		item.Present = true
+
+		out, err := exec.Command(t.Cmd, t.Args...).CombinedOutput()
 		if err == nil {
-			item.Present = true
-
 			lines := strings.Split(strings.TrimSpace(string(out)), "\n")
-
 			if len(lines) > 0 {
 				item.Version = lines[0]
 			}
