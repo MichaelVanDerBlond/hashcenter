@@ -65,9 +65,17 @@ INSERT INTO sessions(
 	channel,
 	backend,
 	capture_file,
+	dictionary,
+	attack_mode,
+	hash_mode,
+	rule,
+	mask,
+	device,
+	workload,
+	session_name,
 	error
 )
-VALUES(?,?,?,?,?,?,?,?,?,?)
+VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
 `,
 		s.ID,
 		string(s.State),
@@ -78,6 +86,14 @@ VALUES(?,?,?,?,?,?,?,?,?,?)
 		s.Channel,
 		s.Backend,
 		s.CaptureFile,
+		s.Dictionary,
+		s.AttackMode,
+		s.HashMode,
+		s.Rule,
+		s.Mask,
+		s.Device,
+		s.Workload,
+		s.SessionName,
 		s.Error,
 	)
 
@@ -108,6 +124,14 @@ SET
 	channel=?,
 	backend=?,
 	capture_file=?,
+	dictionary=?,
+	attack_mode=?,
+	hash_mode=?,
+	rule=?,
+	mask=?,
+	device=?,
+	workload=?,
+	session_name=?,
 	error=?
 WHERE id=?
 `,
@@ -119,6 +143,14 @@ WHERE id=?
 		s.Channel,
 		s.Backend,
 		s.CaptureFile,
+		s.Dictionary,
+		s.AttackMode,
+		s.HashMode,
+		s.Rule,
+		s.Mask,
+		s.Device,
+		s.Workload,
+		s.SessionName,
 		s.Error,
 		s.ID,
 	)
@@ -152,6 +184,14 @@ SELECT
 	channel,
 	backend,
 	capture_file,
+	dictionary,
+	attack_mode,
+	hash_mode,
+	rule,
+	mask,
+	device,
+	workload,
+	session_name,
 	error
 FROM sessions
 WHERE id=?
@@ -167,6 +207,14 @@ WHERE id=?
 		&s.Channel,
 		&s.Backend,
 		&s.CaptureFile,
+		&s.Dictionary,
+		&s.AttackMode,
+		&s.HashMode,
+		&s.Rule,
+		&s.Mask,
+		&s.Device,
+		&s.Workload,
+		&s.SessionName,
 		&s.Error,
 	)
 
@@ -197,6 +245,14 @@ SELECT
 	channel,
 	backend,
 	capture_file,
+	dictionary,
+	attack_mode,
+	hash_mode,
+	rule,
+	mask,
+	device,
+	workload,
+	session_name,
 	error
 FROM sessions
 ORDER BY created DESC
@@ -225,6 +281,14 @@ ORDER BY created DESC
 			&s.Channel,
 			&s.Backend,
 			&s.CaptureFile,
+			&s.Dictionary,
+			&s.AttackMode,
+			&s.HashMode,
+			&s.Rule,
+			&s.Mask,
+			&s.Device,
+			&s.Workload,
+			&s.SessionName,
 			&s.Error,
 		); err != nil {
 			return nil, err
