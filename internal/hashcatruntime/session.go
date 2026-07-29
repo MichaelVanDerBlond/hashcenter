@@ -1,6 +1,9 @@
 package hashcatruntime
 
-import "sync"
+import (
+	"sync"
+	"time"
+)
 
 type Session struct {
 	mu sync.RWMutex
@@ -10,9 +13,13 @@ type Session struct {
 
 func NewSession(name string) *Session {
 
+	now := time.Now()
+
 	s := &Session{}
 
 	s.snapshot.Session = name
+	s.snapshot.Started = now
+	s.snapshot.Updated = now
 
 	return s
 }
@@ -31,4 +38,6 @@ func (s *Session) Update(fn func(*Snapshot)) {
 	defer s.mu.Unlock()
 
 	fn(&s.snapshot)
+
+	s.snapshot.Updated = time.Now()
 }
