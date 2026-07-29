@@ -8,6 +8,12 @@ type Manager struct {
 	tasks map[string]*Task
 }
 
+func NewManager() *Manager {
+	return &Manager{
+		tasks: make(map[string]*Task),
+	}
+}
+
 var (
 	defaultManager *Manager
 	once           sync.Once
@@ -15,9 +21,7 @@ var (
 
 func DefaultManager() *Manager {
 	once.Do(func() {
-		defaultManager = &Manager{
-			tasks: make(map[string]*Task),
-		}
+		defaultManager = NewManager()
 	})
 
 	return defaultManager
@@ -43,8 +47,8 @@ func (m *Manager) Get(id string) (*Task, bool) {
 		return nil, false
 	}
 
-	copyTask := *t
-	return &copyTask, true
+	cp := *t
+	return &cp, true
 }
 
 func (m *Manager) List() []*Task {
@@ -54,8 +58,8 @@ func (m *Manager) List() []*Task {
 	result := make([]*Task, 0, len(m.tasks))
 
 	for _, t := range m.tasks {
-		copyTask := *t
-		result = append(result, &copyTask)
+		cp := *t
+		result = append(result, &cp)
 	}
 
 	return result
