@@ -6,11 +6,21 @@ type Manager struct {
 	mu sync.RWMutex
 
 	tasks map[string]*Task
+	store Store
 }
 
 func NewManager() *Manager {
+	return NewManagerWithStore(NewMemoryStore())
+}
+
+func NewManagerWithStore(store Store) *Manager {
+	if store == nil {
+		store = NewMemoryStore()
+	}
+
 	return &Manager{
 		tasks: make(map[string]*Task),
+		store: store,
 	}
 }
 
@@ -25,42 +35,4 @@ func DefaultManager() *Manager {
 	})
 
 	return defaultManager
-}
-
-func (m *Manager) Add(t *Task) {
-	if t == nil {
-		return
-	}
-
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
-	m.tasks[t.ID] = t
-}
-
-func (m *Manager) Get(id string) (*Task, bool) {
-	m.mu.RLock()
-	defer m.mu.RUnlock()
-
-	t, ok := m.tasks[id]
-	if !ok {
-		return nil, false
-	}
-
-	cp := *t
-	return &cp, true
-}
-
-func (m *Manager) List() []*Task {
-	m.mu.RLock()
-	defer m.mu.RUnlock()
-
-	result := make([]*Task, 0, len(m.tasks))
-
-	for _, t := range m.tasks {
-		cp := *t
-		result = append(result, &cp)
-	}
-
-	return result
 }
