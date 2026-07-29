@@ -1,13 +1,13 @@
 package task
 
-func (m *Manager) Queued() []*Task {
+func (m *Manager) filterByState(state State) []*Task {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 
 	result := make([]*Task, 0)
 
 	for _, t := range m.tasks {
-		if t.State != Queued {
+		if t.State != state {
 			continue
 		}
 
@@ -16,40 +16,16 @@ func (m *Manager) Queued() []*Task {
 	}
 
 	return result
+}
+
+func (m *Manager) Queued() []*Task {
+	return m.filterByState(Queued)
 }
 
 func (m *Manager) Running() []*Task {
-	m.mu.RLock()
-	defer m.mu.RUnlock()
-
-	result := make([]*Task, 0)
-
-	for _, t := range m.tasks {
-		if t.State != Running {
-			continue
-		}
-
-		copyTask := *t
-		result = append(result, &copyTask)
-	}
-
-	return result
+	return m.filterByState(Running)
 }
 
 func (m *Manager) Finished() []*Task {
-	m.mu.RLock()
-	defer m.mu.RUnlock()
-
-	result := make([]*Task, 0)
-
-	for _, t := range m.tasks {
-		if t.State != Finished {
-			continue
-		}
-
-		copyTask := *t
-		result = append(result, &copyTask)
-	}
-
-	return result
+	return m.filterByState(Finished)
 }
