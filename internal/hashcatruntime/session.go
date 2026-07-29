@@ -17,9 +17,11 @@ func NewSession(name string) *Session {
 
 	s := &Session{}
 
-	s.snapshot.Session = name
-	s.snapshot.Started = now
-	s.snapshot.Updated = now
+	s.snapshot = Snapshot{
+		Session: name,
+		Started: now,
+		Updated: now,
+	}
 
 	return s
 }
@@ -40,4 +42,8 @@ func (s *Session) Update(fn func(*Snapshot)) {
 	fn(&s.snapshot)
 
 	s.snapshot.Updated = time.Now()
+
+	if s.snapshot.Started.IsZero() {
+		s.snapshot.Started = s.snapshot.Updated
+	}
 }

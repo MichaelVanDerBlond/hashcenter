@@ -34,7 +34,14 @@ func (c *Client) Consume(ctx context.Context, r io.Reader) error {
 		}
 
 		c.session.Update(func(s *Snapshot) {
+
+			started := s.Started
+
 			*s = snapshot
+
+			if !started.IsZero() && s.Started.IsZero() {
+				s.Started = started
+			}
 		})
 	}
 
