@@ -7,3 +7,13 @@ output/
 
 # Go
 coverage.out
+
+# Archives
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+
+# AI generated
+*.bak
+*.tmp
