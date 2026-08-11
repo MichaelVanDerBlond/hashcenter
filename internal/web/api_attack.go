@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/MichaelVanDerBlond/hashcenter/internal/attack"
+	"github.com/MichaelVanDerBlond/hashcenter/internal/task"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,7 +25,6 @@ type AttackRequest struct {
 }
 
 func apiAttack(c *gin.Context) {
-
 	var req AttackRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -41,8 +41,11 @@ func apiAttack(c *gin.Context) {
 		return
 	}
 
-	for _, dict := range req.Dictionaries {
+	manager := task.DefaultManager()
 
+	created := 0
+
+	for _, dict := range req.Dictionaries {
 		job := attack.Job{
 			HashFile:    req.HashFile,
 			Dictionary:  dict,
@@ -56,11 +59,20 @@ func apiAttack(c *gin.Context) {
 			Extra:       append([]string(nil), req.Extra...),
 		}
 
-		enqueue(job)
+		t := task.NewAttack("", job)
+
+		if _, err := manager.Create(t); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		created++
 	}
 
 	c.JSON(http.StatusAccepted, gin.H{
 		"status": "queued",
-		"jobs":   len(req.Dictionaries),
+		"jobs":   created,
 	})
 }

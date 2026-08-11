@@ -1,54 +1,40 @@
 package web
 
 import (
-	"sync"
 	"time"
+
+	"github.com/MichaelVanDerBlond/hashcenter/internal/task"
 )
 
 type QueueJob struct {
-	ID         int       `json:"id"`
+	ID         string    `json:"id"`
 	HashFile   string    `json:"hash_file"`
 	Dictionary string    `json:"dictionary"`
 	State      string    `json:"state"`
 	Started    time.Time `json:"started,omitempty"`
 	Finished   time.Time `json:"finished,omitempty"`
-}
-
-var (
-	queueMu sync.RWMutex
-
-	queueJobs []*QueueJob
-
-	nextQueueID int
-)
-
-func addQueueJob(hash, dict string) *QueueJob {
-	queueMu.Lock()
-	defer queueMu.Unlock()
-
-	nextQueueID++
-
-	job := &QueueJob{
-		ID:         nextQueueID,
-		HashFile:   hash,
-		Dictionary: dict,
-		State:      "queued",
-	}
-
-	queueJobs = append(queueJobs, job)
-
-	return job
+	Error      string    `json:"error,omitempty"`
 }
 
 func listQueueJobs() []*QueueJob {
-	queueMu.RLock()
-	defer queueMu.RUnlock()
+	tasks := task.DefaultManager().All()
 
-	result := make([]*QueueJob, 0, len(queueJobs))
+	result := make([]*QueueJob, 0, len(tasks))
 
-	for _, job := range queueJobs {
-		copyJob := *job
-		result = append(result, &copyJob)
+	for _, t := range tasks {
+		if t == nil || t.Type != task.Attack {
+			continue
+		}
+
+		result = append(result, &QueueJob{
+			ID:         t.ID,
+			HashFile:   t.HashFile,
+			Dictionary: t.Dictionary,
+			State:      string(t.State),
+			Started:    t.Started,
+			Finished:   t.Finished,
+			Error:      t.Error,
+		})
 	}
 
 	return result
