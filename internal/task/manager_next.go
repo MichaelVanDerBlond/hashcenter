@@ -15,6 +15,14 @@ func (m *Manager) NextQueued() (*Task, bool) {
 			t.Started = now()
 		}
 
+		if m.store != nil {
+			if err := m.store.Update(t); err != nil {
+				t.State = Queued
+				t.Started = t.Started.Add(0)
+				return nil, false
+			}
+		}
+
 		copyTask := *t
 		return &copyTask, true
 	}

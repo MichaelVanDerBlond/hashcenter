@@ -24,6 +24,12 @@ func (m *Manager) SetState(id string, state State) bool {
 		}
 	}
 
+	if m.store != nil {
+		if err := m.store.Update(t); err != nil {
+			return false
+		}
+	}
+
 	return true
 }
 
@@ -41,6 +47,12 @@ func (m *Manager) SetError(id, errText string) bool {
 
 	if t.Finished.IsZero() {
 		t.Finished = time.Now()
+	}
+
+	if m.store != nil {
+		if err := m.store.Update(t); err != nil {
+			return false
+		}
 	}
 
 	return true

@@ -51,6 +51,29 @@ CREATE TABLE IF NOT EXISTS sessions(
 
 	error TEXT
 );
+
+CREATE TABLE IF NOT EXISTS tasks(
+	id TEXT PRIMARY KEY,
+	session_id TEXT,
+	type TEXT NOT NULL,
+	state TEXT NOT NULL,
+
+	created TEXT,
+	started TEXT,
+	finished TEXT,
+
+	hash_file TEXT,
+	dictionary TEXT,
+	hash_mode INTEGER,
+	attack_mode INTEGER,
+	rule TEXT,
+	mask TEXT,
+	device TEXT,
+	workload INTEGER,
+	session_name TEXT,
+
+	error TEXT
+);
 `
 
 var migrations = []string{

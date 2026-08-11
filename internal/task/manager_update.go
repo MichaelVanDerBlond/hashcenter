@@ -1,11 +1,15 @@
 package task
 
 func (m *Manager) Update(id string, fn func(*Task)) bool {
+	if m == nil || id == "" {
+		return false
+	}
+
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
 	t, ok := m.tasks[id]
-	if !ok {
+	if !ok || t == nil {
 		return false
 	}
 
@@ -13,23 +17,11 @@ func (m *Manager) Update(id string, fn func(*Task)) bool {
 		fn(t)
 	}
 
-	return true
-}
-
-func (m *Manager) FindBySession(sessionID string) []*Task {
-	m.mu.RLock()
-	defer m.mu.RUnlock()
-
-	var result []*Task
-
-	for _, t := range m.tasks {
-		if t.SessionID != sessionID {
-			continue
+	if m.store != nil {
+		if err := m.store.Update(t); err != nil {
+			return false
 		}
-
-		copyTask := *t
-		result = append(result, &copyTask)
 	}
 
-	return result
+	return true
 }

@@ -2,6 +2,7 @@ package task
 
 type Store interface {
 	Save(*Task) error
+	Update(*Task) error
 	Delete(id string) error
 	Load() ([]*Task, error)
 }
@@ -13,6 +14,10 @@ func NewMemoryStore() *MemoryStore {
 }
 
 func (s *MemoryStore) Save(*Task) error {
+	return nil
+}
+
+func (s *MemoryStore) Update(*Task) error {
 	return nil
 }
 
