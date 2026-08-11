@@ -3,6 +3,7 @@ package web
 import (
 	"github.com/MichaelVanDerBlond/hashcenter/internal/jobs"
 	"github.com/MichaelVanDerBlond/hashcenter/internal/models"
+	"github.com/MichaelVanDerBlond/hashcenter/internal/task"
 )
 
 type IndexData struct {
@@ -10,7 +11,7 @@ type IndexData struct {
 
 	Jobs []*jobs.Runtime
 
-	Queue []*QueueJob
+	Queue []*task.Task
 
 	Uploads []models.Upload
 
