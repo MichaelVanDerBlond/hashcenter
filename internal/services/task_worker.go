@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/MichaelVanDerBlond/hashcenter/internal/attack"
+	"github.com/MichaelVanDerBlond/hashcenter/internal/session"
 	"github.com/MichaelVanDerBlond/hashcenter/internal/task"
 )
 
@@ -41,7 +42,14 @@ func (w *TaskWorker) Run(ctx context.Context) {
 			continue
 		}
 
+		s := session.New()
+
+		w.manager.Update(t.ID, func(task *task.Task) {
+			task.SessionID = s.ID
+		})
+
 		job := attack.Job{
+			SessionID:   s.ID,
 			HashFile:    t.HashFile,
 			Dictionary:  t.Dictionary,
 			HashMode:    t.HashMode,
@@ -53,7 +61,8 @@ func (w *TaskWorker) Run(ctx context.Context) {
 			Workload:    t.Workload,
 		}
 
-		if err := attack.Execute(ctx, job); err != nil {
+		_, err := attack.ExecuteResult(ctx, job)
+		if err != nil {
 			w.manager.SetError(t.ID, err.Error())
 			log.Printf("task %s failed: %v", t.ID, err)
 			continue

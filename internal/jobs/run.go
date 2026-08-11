@@ -23,6 +23,10 @@ func (m *Manager) Run(ctx context.Context, job Job) (*Result, error) {
 	repo := repository.NewSQLiteSessionRepository(db)
 
 	s := session.New()
+	if job.SessionID != "" {
+		s.ID = job.SessionID
+	}
+
 	s.Backend = "hashcat"
 	s.CaptureFile = job.HashFile
 	s.Dictionary = job.Dictionary

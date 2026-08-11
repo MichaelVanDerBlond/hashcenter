@@ -1,7 +1,12 @@
 package web
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+
+	"github.com/MichaelVanDerBlond/hashcenter/internal/task"
+	"github.com/gin-gonic/gin"
+)
 
 func apiQueue(c *gin.Context) {
-	c.JSON(200, listQueueJobs())
+	c.JSON(http.StatusOK, task.DefaultManager().All())
 }

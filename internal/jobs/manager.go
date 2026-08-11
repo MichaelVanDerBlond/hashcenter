@@ -7,6 +7,8 @@ import (
 )
 
 type Job struct {
+	SessionID string
+
 	HashFile string
 
 	Dictionary string

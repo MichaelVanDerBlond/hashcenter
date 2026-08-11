@@ -4,6 +4,7 @@ import (
 	"github.com/MichaelVanDerBlond/hashcenter/internal/database"
 	"github.com/MichaelVanDerBlond/hashcenter/internal/jobs"
 	"github.com/MichaelVanDerBlond/hashcenter/internal/repository"
+	"github.com/MichaelVanDerBlond/hashcenter/internal/task"
 )
 
 func LoadIndexData() (IndexData, error) {
@@ -46,7 +47,7 @@ func LoadIndexData() (IndexData, error) {
 
 		Jobs: jobs.Active(),
 
-		Queue: listQueueJobs(),
+		Queue: task.DefaultManager().All(),
 
 		Uploads: uploads,
 

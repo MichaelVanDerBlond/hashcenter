@@ -4,10 +4,11 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/MichaelVanDerBlond/hashcenter/internal/jobs"
 	"github.com/MichaelVanDerBlond/hashcenter/internal/workflow"
 )
 
-func Execute(ctx context.Context, job Job) error {
+func ExecuteResult(ctx context.Context, job Job) (*jobs.Result, error) {
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -30,32 +31,41 @@ func Execute(ctx context.Context, job Job) error {
 	engine := workflow.NewDefaultPipeline()
 
 	if err := engine.Run(ctx, wf); err != nil {
-		return err
+		return nil, err
 	}
 
 	if wf.Result == nil {
-		return fmt.Errorf("workflow finished without result")
+		return nil, fmt.Errorf("workflow finished without result")
 	}
 
-	snapshot := wf.Result.Status.Snapshot()
+	return wf.Result, nil
+}
 
-	fmt.Println("Session ID :", wf.Result.SessionID)
+func Execute(ctx context.Context, job Job) error {
+	result, err := ExecuteResult(ctx, job)
+	if err != nil {
+		return err
+	}
+
+	snapshot := result.Status.Snapshot()
+
+	fmt.Println("Session ID :", result.SessionID)
 	fmt.Println("Status     :", snapshot.State)
-	fmt.Println("Exit code  :", wf.Result.Result.ExitCode)
-	fmt.Printf("Duration   : %s\n", wf.Result.Result.Duration)
+	fmt.Println("Exit code  :", result.Result.ExitCode)
+	fmt.Printf("Duration   : %s\n", result.Result.Duration)
 	fmt.Println()
 
-	if wf.Result.Result.Stdout != "" {
+	if result.Result.Stdout != "" {
 		fmt.Println("STDOUT")
 		fmt.Println("----------------------------------------")
-		fmt.Print(wf.Result.Result.Stdout)
+		fmt.Print(result.Result.Stdout)
 		fmt.Println()
 	}
 
-	if wf.Result.Result.Stderr != "" {
+	if result.Result.Stderr != "" {
 		fmt.Println("STDERR")
 		fmt.Println("----------------------------------------")
-		fmt.Print(wf.Result.Result.Stderr)
+		fmt.Print(result.Result.Stderr)
 		fmt.Println()
 	}
 

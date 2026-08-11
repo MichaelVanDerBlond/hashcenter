@@ -36,6 +36,7 @@ func (a *AttackStage) Run(ctx context.Context, wf *Context) error {
 	}
 
 	job := jobs.Job{
+		SessionID:   wf.SessionID,
 		HashFile:    wf.HashFile,
 		Dictionary:  wf.Dictionary,
 		AttackMode:  wf.AttackMode,
