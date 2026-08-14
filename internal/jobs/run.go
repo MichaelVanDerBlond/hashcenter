@@ -77,6 +77,9 @@ func (m *Manager) Run(ctx context.Context, job Job) (*Result, error) {
 
 	result, err = runner.Wait(result)
 
+	// Always preserve the real hashcat exit code.
+	s.ExitCode = result.ExitCode
+
 	if err != nil {
 		s.Fail(err)
 	} else {

@@ -10,7 +10,6 @@ import (
 )
 
 func (r *Runner) Start(ctx context.Context, args ...string) (*Result, *Status, error) {
-
 	r.mu.Lock()
 	r.done = make(chan struct{})
 	r.mu.Unlock()
@@ -95,6 +94,13 @@ func (r *Runner) Start(ctx context.Context, args ...string) (*Result, *Status, e
 		result.Progress = stats.Progress
 		result.Recovered = stats.Recovered
 		result.ETA = stats.ETA
+
+		// Hashcat uses exit status 1 for a normal exhausted attack.
+		// Cracked and Exhausted are successful workflow outcomes,
+		// not process failures.
+		if result.State == "Cracked" || result.State == "Exhausted" {
+			result.Error = nil
+		}
 
 		r.mu.Lock()
 		r.cmd = nil

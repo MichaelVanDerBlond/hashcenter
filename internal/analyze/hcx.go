@@ -1,18 +1,27 @@
 package analyze
 
 import (
+	"os"
 	"strings"
 )
 
 func collectHCX(r *Report) error {
-
 	if !exists("hcxpcapngtool") {
 		return nil
 	}
 
+	tmp, err := os.CreateTemp("", "hashcenter-hcx-*.22000")
+	if err != nil {
+		return nil
+	}
+
+	outputFile := tmp.Name()
+	_ = tmp.Close()
+	defer os.Remove(outputFile)
+
 	out, err := run(
 		"hcxpcapngtool",
-		"-o", "/dev/null",
+		"-o", outputFile,
 		r.Path,
 	)
 
